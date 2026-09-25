@@ -130,7 +130,6 @@ const cases = [
   { number: '02', type: 'Инфраструктура', title: 'Модульные очистные сооружения', className: '' },
   { number: '03', type: 'Социальный объект', title: 'Модульная школа', className: '' },
   { number: '04', type: 'Промышленность', title: 'Золотодобывающее предприятие', className: 'wide' },
-  { number: '05', type: 'Спорт', title: 'Футбольная арена', className: '' },
 ];
 
 function useRevealOnScroll() {
