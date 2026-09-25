@@ -151,11 +151,13 @@ a {
 
 .brand-caption {
   display: none;
-  color: rgba(255, 250, 241, 0.58);
+  color: rgba(255, 250, 241, 0.96);
   font-family: var(--app-font-mono);
-  font-size: 9px;
+  font-size: 10px;
+  font-weight: 600;
   line-height: 1.35;
   letter-spacing: 0.07em;
+  text-shadow: 0 0 8px rgba(255, 250, 241, 0.14);
   text-transform: uppercase;
 }
 
@@ -201,16 +203,65 @@ a {
 }
 
 .header-phone {
+  display: block;
+  padding: 4px 6px;
+  border-radius: 3px;
   color: var(--cream);
+  text-align: right;
+  transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
 }
 
-.header-phone span {
+.header-contact {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.header-phone-number {
   display: block;
-  margin-top: 1px;
+  font-size: clamp(15px, 1.55vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.header-phone-hours {
+  display: block;
+  margin-top: 2px;
   color: var(--orange);
   font-family: var(--app-font-mono);
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 0.04em;
+}
+
+.header-email {
+  padding: 2px 6px 0;
+  color: rgba(255, 250, 241, 0.9);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  transition: color 160ms ease;
+}
+
+.header-email:hover,
+.header-email:focus-visible {
+  color: var(--orange);
+}
+
+.header-phone:focus-visible,
+.header-email:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.header-phone:active {
+  background: rgba(242, 91, 43, 0.16);
+  transform: scale(0.97);
+}
+
+.header-phone:active .header-phone-number {
+  color: var(--orange);
 }
 
 .menu-toggle {
@@ -1710,7 +1761,7 @@ a {
     font-size: 10px;
   }
 
-  .header-phone {
+  .header-contact {
     display: none;
   }
 
@@ -1808,6 +1859,39 @@ a {
     font-family: var(--app-font-mono);
     font-size: 10px;
     text-transform: uppercase;
+  }
+
+  .mobile-contact {
+    display: grid;
+    gap: 7px;
+    margin-top: 8px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 250, 241, 0.2);
+  }
+
+  .mobile-nav .mobile-contact-phone {
+    padding: 0;
+    border: 0;
+    color: var(--cream);
+    font-family: var(--app-font-sans);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: none;
+  }
+
+  .mobile-contact-hours {
+    color: var(--orange);
+    font-family: var(--app-font-mono);
+    font-size: 10px;
+  }
+
+  .mobile-nav .mobile-contact-email {
+    padding: 0;
+    border: 0;
+    color: rgba(255, 250, 241, 0.9);
+    font-size: 11px;
+    text-transform: none;
   }
 
   .hero {
