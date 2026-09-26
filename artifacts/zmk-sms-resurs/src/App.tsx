@@ -447,12 +447,25 @@ function Glazing() {
   return (
     <section className="section glazing-section" id="glazing" data-testid="section-glazing">
       <div className="section-inner">
-        <div className="section-heading glazing-heading reveal">
-          <div className="glazing-heading-title">
+        <div className="glazing-layout">
+          <div className="glazing-services-column">
+            <div className="glazing-heading-title reveal">
             <span className="eyebrow">02 / Партнёрские решения</span>
             <h2 className="display">Окна, двери<br />и перегородки.</h2>
+            </div>
+            <div className="glazing-grid">
+              {glazingServices.map((service, index) => {
+                return (
+                  <article className={`glazing-card reveal delay-${Math.min(index, 3)}`} key={service.index} data-testid={`card-glazing-${index + 1}`}>
+                    <span className="service-index">{service.index}</span>
+                    <h3>{service.title}</h3>
+                    <p>{service.description}</p>
+                  </article>
+                );
+              })}
+            </div>
           </div>
-          <div className="glazing-intro">
+          <div className="glazing-intro reveal">
             <figure className="glazing-visual" data-testid="image-glazing-window">
               <img
                 className="glazing-window-photo"
@@ -471,17 +484,6 @@ function Glazing() {
               документации.
             </p>
           </div>
-        </div>
-        <div className="glazing-grid">
-          {glazingServices.map((service, index) => {
-            return (
-              <article className={`glazing-card reveal delay-${Math.min(index, 3)}`} key={service.index} data-testid={`card-glazing-${index + 1}`}>
-                <span className="service-index">{service.index}</span>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-              </article>
-            );
-          })}
         </div>
         <div className="glazing-note reveal">
           <span>Рекомендация партнёров · решение под проект</span>
