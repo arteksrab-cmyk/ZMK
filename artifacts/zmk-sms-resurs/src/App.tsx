@@ -23,6 +23,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
+import sokolLogo from './sokol-logo.svg';
 
 const queryClient = new QueryClient();
 const assetBase = import.meta.env.BASE_URL.endsWith('/')
@@ -449,7 +450,8 @@ function Glazing() {
     <section className="section glazing-section" id="glazing" data-testid="section-glazing">
       <div className="section-inner">
         <div className="section-heading reveal">
-          <div>
+          <div className="glazing-heading-title">
+            <img className="glazing-watermark" src={sokolLogo} alt="" aria-hidden="true" />
             <span className="eyebrow">02 / Партнёрские решения</span>
             <h2 className="display">Окна, двери<br />и перегородки.</h2>
           </div>
