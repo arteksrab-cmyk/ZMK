@@ -708,7 +708,7 @@ a {
   max-width: 100%;
   margin: 74px 0 14px;
   font-family: var(--app-font-serif);
-  font-size: clamp(30px, 3vw, 43px);
+  font-size: clamp(28px, 2.6vw, 38px);
   line-height: 0.96;
 }
 
@@ -1256,10 +1256,10 @@ a {
 }
 
 .workflow-step h3 {
-  max-width: 160px;
+  max-width: 100%;
   margin: 57px 0 13px;
   font-family: var(--app-font-serif);
-  font-size: 31px;
+  font-size: clamp(22px, 1.8vw, 26px);
   line-height: 0.96;
 }
 
@@ -1815,6 +1815,10 @@ a {
     row-gap: 0;
   }
 
+  .workflow-step h3 {
+    font-size: clamp(25px, 2.7vw, 31px);
+  }
+
   .workflow-step:nth-child(odd) {
     padding-left: 0;
   }
@@ -2018,6 +2022,10 @@ a {
   .faq-layout,
   .contact-layout {
     display: block;
+  }
+
+  .glazing-grid {
+    grid-template-columns: 1fr;
   }
 
   .panels-copy {
