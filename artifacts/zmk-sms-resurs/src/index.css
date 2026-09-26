@@ -220,6 +220,18 @@ a {
   gap: 1px;
 }
 
+.header-phone-main {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.header-phone-icon {
+  flex: 0 0 auto;
+  color: var(--orange);
+}
+
 .header-phone-number {
   display: block;
   font-size: clamp(15px, 1.55vw, 18px);
@@ -237,23 +249,109 @@ a {
   letter-spacing: 0.04em;
 }
 
-.header-email {
-  padding: 2px 6px 0;
+.header-email-actions {
+  position: relative;
+}
+
+.header-email-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px 0;
+  border: 0;
+  background: transparent;
   color: rgba(255, 250, 241, 0.9);
+  cursor: pointer;
   font-family: var(--app-font-mono);
   font-size: 9px;
   transition: color 160ms ease;
 }
 
-.header-email:hover,
-.header-email:focus-visible {
+.header-email-trigger svg {
+  flex: 0 0 auto;
+}
+
+.header-email-trigger:hover,
+.header-email-trigger:focus-visible,
+.header-email-trigger[aria-expanded='true'] {
   color: var(--orange);
 }
 
-.header-phone:focus-visible,
-.header-email:focus-visible {
+.header-email-trigger:focus-visible,
+.header-email-menu button:focus-visible,
+.header-email-menu a:focus-visible {
   outline: 2px solid var(--orange);
   outline-offset: 2px;
+}
+
+.header-email-chevron {
+  transition: transform 160ms ease;
+}
+
+.header-email-trigger[aria-expanded='true'] .header-email-chevron {
+  transform: rotate(180deg);
+}
+
+.header-email-menu {
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  z-index: 30;
+  display: grid;
+  min-width: 198px;
+  gap: 2px;
+  padding: 5px;
+  border: 1px solid rgba(255, 250, 241, 0.18);
+  border-radius: 3px;
+  background: #172630;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+}
+
+.header-email-menu[hidden] {
+  display: none;
+}
+
+.header-email-menu button,
+.header-email-menu a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 10px 11px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: rgba(255, 250, 241, 0.9);
+  cursor: pointer;
+  font-family: var(--app-font-sans);
+  font-size: 12px;
+  text-align: left;
+}
+
+.header-email-menu button:hover,
+.header-email-menu a:hover {
+  background: rgba(255, 250, 241, 0.08);
+  color: var(--cream);
+}
+
+.header-email-menu svg {
+  flex: 0 0 auto;
+  color: var(--orange);
+}
+
+.header-email-status {
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  z-index: 31;
+  padding: 7px 10px;
+  border: 1px solid rgba(238, 89, 13, 0.5);
+  border-radius: 2px;
+  background: #172630;
+  color: var(--cream);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  white-space: nowrap;
 }
 
 .header-phone:active {
@@ -331,7 +429,7 @@ a {
 .hero h1 {
   max-width: 720px;
   margin: 25px 0 30px;
-  font-size: clamp(66px, 9vw, 144px);
+  font-size: clamp(44px, 6vw, 96px);
 }
 
 .hero h1 em {
@@ -1831,7 +1929,7 @@ a {
   }
 
   .hero h1 {
-    font-size: clamp(56px, 7.2vw, 88px);
+    font-size: clamp(37px, 4.8vw, 59px);
   }
 
   .hero-visual {
@@ -1924,7 +2022,7 @@ a {
 
   .hero h1 {
     margin-top: 22px;
-    font-size: clamp(48px, 15vw, 64px);
+    font-size: clamp(32px, 10vw, 43px);
   }
 
   .hero-lede {

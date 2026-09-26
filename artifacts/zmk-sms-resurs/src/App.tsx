@@ -1,10 +1,12 @@
-import { type FormEvent, type ReactNode, useEffect, useState } from 'react';
+import { type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 import {
   ArrowDownRight,
   ArrowUpRight,
   Check,
   CheckCircle2,
+  ChevronDown,
   ClipboardCheck,
+  Copy,
   FileCheck2,
   Mail,
   MapPin,
@@ -151,9 +153,95 @@ function useRevealOnScroll() {
   }, []);
 }
 
+async function copyTextToClipboard(value: string) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return;
+    } catch {
+      // Continue with the selection-based fallback for browsers that deny clipboard access.
+    }
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = value;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  const copied = document.execCommand('copy');
+  textarea.remove();
+
+  if (!copied) {
+    throw new Error('Clipboard copy failed');
+  }
+}
+
 function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [emailActionsOpen, setEmailActionsOpen] = useState(false);
+  const [emailCopyStatus, setEmailCopyStatus] = useState('');
+  const emailActionsRef = useRef<HTMLDivElement>(null);
+  const emailActionsTriggerRef = useRef<HTMLButtonElement>(null);
+  const emailCopyTimerRef = useRef<number | null>(null);
   const closeMenu = () => setMobileOpen(false);
+
+  useEffect(() => {
+    if (!emailActionsOpen) return;
+
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (!emailActionsRef.current?.contains(event.target as Node)) {
+        setEmailActionsOpen(false);
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setEmailActionsOpen(false);
+        emailActionsTriggerRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [emailActionsOpen]);
+
+  useEffect(
+    () => () => {
+      if (emailCopyTimerRef.current !== null) {
+        window.clearTimeout(emailCopyTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  const showEmailCopyStatus = (message: string) => {
+    setEmailCopyStatus(message);
+    if (emailCopyTimerRef.current !== null) {
+      window.clearTimeout(emailCopyTimerRef.current);
+    }
+    emailCopyTimerRef.current = window.setTimeout(() => {
+      setEmailCopyStatus('');
+      emailCopyTimerRef.current = null;
+    }, 2400);
+  };
+
+  const handleCopyEmail = async () => {
+    try {
+      await copyTextToClipboard(businessEmail);
+      setEmailActionsOpen(false);
+      emailActionsTriggerRef.current?.focus();
+      showEmailCopyStatus('Почта скопирована');
+    } catch {
+      setEmailActionsOpen(false);
+      emailActionsTriggerRef.current?.focus();
+      showEmailCopyStatus('Не удалось скопировать почту');
+    }
+  };
 
   return (
     <header className="site-header" data-testid="site-header">
@@ -172,12 +260,53 @@ function Header() {
         </nav>
         <div className="header-contact" data-testid="header-contact">
           <a className="header-phone" href="tel:+79069624358" data-testid="link-header-phone">
-            <span className="header-phone-number">8 906 962 43 58</span>
+            <span className="header-phone-main">
+              <Phone className="header-phone-icon" size={14} aria-hidden="true" />
+              <span className="header-phone-number">8 906 962 43 58</span>
+            </span>
             <span className="header-phone-hours">с 8 до 20 часов</span>
           </a>
-          <a className="header-email" href={`mailto:${businessEmail}`} data-testid="link-header-email">
-            {businessEmail}
-          </a>
+          <div className="header-email-actions" ref={emailActionsRef}>
+            <button
+              ref={emailActionsTriggerRef}
+              className="header-email-trigger"
+              type="button"
+              aria-label={`Действия с адресом ${businessEmail}`}
+              aria-expanded={emailActionsOpen}
+              aria-controls="header-email-menu"
+              onClick={() => setEmailActionsOpen((open) => !open)}
+              data-testid="button-header-email-actions"
+            >
+              <Mail size={12} aria-hidden="true" />
+              <span>{businessEmail}</span>
+              <ChevronDown className="header-email-chevron" size={12} aria-hidden="true" />
+            </button>
+            <div
+              id="header-email-menu"
+              className="header-email-menu"
+              hidden={!emailActionsOpen}
+              aria-label="Действия с электронной почтой"
+            >
+              <button type="button" onClick={handleCopyEmail} data-testid="button-copy-header-email">
+                <Copy size={14} aria-hidden="true" />
+                <span>Скопировать адрес</span>
+              </button>
+              <a href={`mailto:${businessEmail}`} data-testid="link-compose-header-email">
+                <Send size={14} aria-hidden="true" />
+                <span>Написать письмо</span>
+              </a>
+            </div>
+            {emailCopyStatus && (
+              <span
+                className="header-email-status"
+                role="status"
+                aria-live="polite"
+                data-testid="status-header-email-copy"
+              >
+                {emailCopyStatus}
+              </span>
+            )}
+          </div>
         </div>
         <button
           className="menu-toggle"
