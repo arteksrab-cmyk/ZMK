@@ -129,10 +129,10 @@ a {
 .header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: 74px;
+  justify-content: flex-start;
+  min-height: 68px;
   margin: 0 auto;
-  padding: 0 5vw;
+  padding: 0 clamp(12px, 1.5vw, 22px);
 }
 
 .brand-lockup {
@@ -143,7 +143,7 @@ a {
 }
 
 .brand-lockup img {
-  width: 161px;
+  width: clamp(118px, 12vw, 145px);
   height: auto;
   padding: 6px 8px;
   border-radius: 2px;
@@ -165,9 +165,8 @@ a {
 .main-nav {
   display: flex;
   align-items: center;
-  gap: clamp(16px, 2.4vw, 35px);
-  margin-left: auto;
-  margin-right: clamp(17px, 3vw, 54px);
+  gap: clamp(10px, 1.35vw, 20px);
+  margin-right: auto;
 }
 
 .main-nav a,
@@ -205,7 +204,7 @@ a {
 
 .header-phone {
   display: block;
-  padding: 4px 6px;
+  padding: 0;
   border-radius: 3px;
   color: var(--cream);
   text-align: right;
@@ -216,8 +215,17 @@ a {
   display: flex;
   flex: 0 0 auto;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
+  align-items: stretch;
+  gap: 2px;
+  min-width: 238px;
+  margin-right: clamp(48px, 5vw, 72px);
+}
+
+.header-contact-topline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
 }
 
 .header-phone-main {
@@ -256,14 +264,14 @@ a {
 .header-email-trigger {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 6px 0;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 4px;
   border: 0;
   background: transparent;
   color: rgba(255, 250, 241, 0.9);
   cursor: pointer;
-  font-family: var(--app-font-mono);
-  font-size: 9px;
   transition: color 160ms ease;
 }
 
@@ -284,12 +292,18 @@ a {
   outline-offset: 2px;
 }
 
-.header-email-chevron {
-  transition: transform 160ms ease;
-}
-
-.header-email-trigger[aria-expanded='true'] .header-email-chevron {
-  transform: rotate(180deg);
+.header-addresses {
+  display: grid;
+  gap: 1px;
+  margin: 0;
+  color: var(--orange);
+  font-family: var(--app-font-mono);
+  font-size: clamp(7px, 0.7vw, 9px);
+  font-style: normal;
+  letter-spacing: 0.015em;
+  line-height: 1.25;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .header-email-menu {
@@ -1847,15 +1861,15 @@ a {
   }
 
   .main-nav {
-    display: none;
+    gap: clamp(9px, 1vw, 12px);
   }
 
-  .header-contact {
-    display: none;
+  .main-nav a {
+    font-size: 9px;
   }
 
   .menu-toggle {
-    display: flex;
+    display: none;
   }
 
   .mobile-nav {
@@ -1902,6 +1916,16 @@ a {
     color: var(--orange);
     font-family: var(--app-font-mono);
     font-size: 10px;
+  }
+
+  .mobile-contact-addresses {
+    display: grid;
+    gap: 4px;
+    color: var(--orange);
+    font-family: var(--app-font-mono);
+    font-size: 9px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
   }
 
   .mobile-nav .mobile-contact-email {
@@ -1980,6 +2004,17 @@ a {
 
   .workflow-step::after {
     display: none;
+  }
+}
+
+@media (max-width: 950px) {
+  .main-nav,
+  .header-contact {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
   }
 }
 

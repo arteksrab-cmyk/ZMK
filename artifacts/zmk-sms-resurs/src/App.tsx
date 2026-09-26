@@ -4,7 +4,6 @@ import {
   ArrowUpRight,
   Check,
   CheckCircle2,
-  ChevronDown,
   ClipboardCheck,
   Copy,
   FileCheck2,
@@ -259,54 +258,58 @@ function Header() {
           <a href="#contacts" data-testid="link-contacts">Контакты</a>
         </nav>
         <div className="header-contact" data-testid="header-contact">
-          <a className="header-phone" href="tel:+79069624358" data-testid="link-header-phone">
-            <span className="header-phone-main">
-              <Phone className="header-phone-icon" size={14} aria-hidden="true" />
-              <span className="header-phone-number">8 906 962 43 58</span>
-            </span>
-            <span className="header-phone-hours">с 8 до 20 часов</span>
-          </a>
-          <div className="header-email-actions" ref={emailActionsRef}>
-            <button
-              ref={emailActionsTriggerRef}
-              className="header-email-trigger"
-              type="button"
-              aria-label={`Действия с адресом ${businessEmail}`}
-              aria-expanded={emailActionsOpen}
-              aria-controls="header-email-menu"
-              onClick={() => setEmailActionsOpen((open) => !open)}
-              data-testid="button-header-email-actions"
-            >
-              <Mail size={12} aria-hidden="true" />
-              <span>{businessEmail}</span>
-              <ChevronDown className="header-email-chevron" size={12} aria-hidden="true" />
-            </button>
-            <div
-              id="header-email-menu"
-              className="header-email-menu"
-              hidden={!emailActionsOpen}
-              aria-label="Действия с электронной почтой"
-            >
-              <button type="button" onClick={handleCopyEmail} data-testid="button-copy-header-email">
-                <Copy size={14} aria-hidden="true" />
-                <span>Скопировать адрес</span>
-              </button>
-              <a href={`mailto:${businessEmail}`} data-testid="link-compose-header-email">
-                <Send size={14} aria-hidden="true" />
-                <span>Написать письмо</span>
-              </a>
-            </div>
-            {emailCopyStatus && (
-              <span
-                className="header-email-status"
-                role="status"
-                aria-live="polite"
-                data-testid="status-header-email-copy"
+          <div className="header-contact-topline">
+            <div className="header-email-actions" ref={emailActionsRef}>
+              <button
+                ref={emailActionsTriggerRef}
+                className="header-email-trigger"
+                type="button"
+                aria-label={`Действия с адресом ${businessEmail}`}
+                title="Электронная почта"
+                aria-expanded={emailActionsOpen}
+                aria-controls="header-email-menu"
+                onClick={() => setEmailActionsOpen((open) => !open)}
+                data-testid="button-header-email-actions"
               >
-                {emailCopyStatus}
+                <Mail size={14} aria-hidden="true" />
+              </button>
+              <div
+                id="header-email-menu"
+                className="header-email-menu"
+                hidden={!emailActionsOpen}
+                aria-label="Действия с электронной почтой"
+              >
+                <button type="button" onClick={handleCopyEmail} data-testid="button-copy-header-email">
+                  <Copy size={14} aria-hidden="true" />
+                  <span>Скопировать адрес</span>
+                </button>
+                <a href={`mailto:${businessEmail}`} data-testid="link-compose-header-email">
+                  <Send size={14} aria-hidden="true" />
+                  <span>Написать письмо</span>
+                </a>
+              </div>
+              {emailCopyStatus && (
+                <span
+                  className="header-email-status"
+                  role="status"
+                  aria-live="polite"
+                  data-testid="status-header-email-copy"
+                >
+                  {emailCopyStatus}
+                </span>
+              )}
+            </div>
+            <a className="header-phone" href="tel:+79069624358" data-testid="link-header-phone">
+              <span className="header-phone-main">
+                <Phone className="header-phone-icon" size={14} aria-hidden="true" />
+                <span className="header-phone-number">8 906 962 43 58</span>
               </span>
-            )}
+            </a>
           </div>
+          <address className="header-addresses">
+            <span>Офис: г. Новосибирск, ул. Инская 39</span>
+            <span>Производство: 2я Станционная 30, корп 3</span>
+          </address>
         </div>
         <button
           className="menu-toggle"
@@ -330,6 +333,10 @@ function Header() {
           <div className="mobile-contact">
             <a className="mobile-contact-phone" href="tel:+79069624358">8 906 962 43 58</a>
             <span className="mobile-contact-hours">с 8 до 20 часов</span>
+            <div className="mobile-contact-addresses">
+              <span>Офис: г. Новосибирск, ул. Инская 39</span>
+              <span>Производство: 2я Станционная 30, корп 3</span>
+            </div>
             <a className="mobile-contact-email" href={`mailto:${businessEmail}`}>{businessEmail}</a>
           </div>
         </nav>
