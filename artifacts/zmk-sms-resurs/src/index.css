@@ -1749,16 +1749,69 @@ a {
   }
 
   .main-nav {
-    gap: 15px;
-    margin-right: 17px;
-  }
-
-  .main-nav a {
-    font-size: 10px;
+    display: none;
   }
 
   .header-contact {
     display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .mobile-nav {
+    position: absolute;
+    top: 74px;
+    right: 0;
+    left: 0;
+    display: grid;
+    gap: 2px;
+    padding: 10px clamp(20px, 5vw, 49px) 18px;
+    border-top: 1px solid rgba(255, 250, 241, 0.15);
+    background: rgba(17, 28, 38, 0.98);
+  }
+
+  .mobile-nav a {
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255, 250, 241, 0.12);
+    color: rgba(255, 250, 241, 0.77);
+    font-family: var(--app-font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+  }
+
+  .mobile-contact {
+    display: grid;
+    gap: 7px;
+    margin-top: 8px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 250, 241, 0.2);
+  }
+
+  .mobile-nav .mobile-contact-phone {
+    padding: 0;
+    border: 0;
+    color: var(--cream);
+    font-family: var(--app-font-sans);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: none;
+  }
+
+  .mobile-contact-hours {
+    color: var(--orange);
+    font-family: var(--app-font-mono);
+    font-size: 10px;
+  }
+
+  .mobile-nav .mobile-contact-email {
+    padding: 0;
+    border: 0;
+    color: rgba(255, 250, 241, 0.9);
+    font-size: 11px;
+    text-transform: none;
   }
 
   .stats-strip {
@@ -1850,66 +1903,10 @@ a {
     width: 143px;
   }
 
-  .main-nav {
-    display: none;
-  }
-
-  .menu-toggle {
-    display: flex;
-  }
-
   .mobile-nav {
-    position: absolute;
     top: 82px;
-    right: 0;
-    left: 0;
-    display: grid;
-    gap: 2px;
-    padding: 10px 20px 18px;
-    border-top: 1px solid rgba(255, 250, 241, 0.15);
-    background: rgba(17, 28, 38, 0.98);
-  }
-
-  .mobile-nav a {
-    padding: 13px 0;
-    border-bottom: 1px solid rgba(255, 250, 241, 0.12);
-    color: rgba(255, 250, 241, 0.77);
-    font-family: var(--app-font-mono);
-    font-size: 10px;
-    text-transform: uppercase;
-  }
-
-  .mobile-contact {
-    display: grid;
-    gap: 7px;
-    margin-top: 8px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(255, 250, 241, 0.2);
-  }
-
-  .mobile-nav .mobile-contact-phone {
-    padding: 0;
-    border: 0;
-    color: var(--cream);
-    font-family: var(--app-font-sans);
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: none;
-  }
-
-  .mobile-contact-hours {
-    color: var(--orange);
-    font-family: var(--app-font-mono);
-    font-size: 10px;
-  }
-
-  .mobile-nav .mobile-contact-email {
-    padding: 0;
-    border: 0;
-    color: rgba(255, 250, 241, 0.9);
-    font-size: 11px;
-    text-transform: none;
+    padding-right: 20px;
+    padding-left: 20px;
   }
 
   .hero {
