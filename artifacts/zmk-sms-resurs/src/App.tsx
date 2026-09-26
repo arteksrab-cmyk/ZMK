@@ -308,7 +308,6 @@ function Header() {
             </a>
           </div>
           <address className="header-addresses">
-            <span>Офис: г. Новосибирск, ул. Инская 39</span>
             <span>Производство: 2я Станционная 30, корп 3</span>
           </address>
         </div>
@@ -335,7 +334,6 @@ function Header() {
             <a className="mobile-contact-phone" href="tel:+79069624358">8 906 962 43 58</a>
             <span className="mobile-contact-hours">с 8 до 20 часов</span>
             <div className="mobile-contact-addresses">
-              <span>Офис: г. Новосибирск, ул. Инская 39</span>
               <span>Производство: 2я Станционная 30, корп 3</span>
             </div>
             <a className="mobile-contact-email" href={`mailto:${businessEmail}`}>{businessEmail}</a>
@@ -459,20 +457,11 @@ function Glazing() {
               <img
                 className="glazing-window-photo"
                 src={`${assetBase}images/window-glazing.jpg`}
-                alt="Прозрачное панорамное окно с видом на город"
+                alt="Панорамные окна в интерьере квартиры с видом на зимний город"
                 loading="lazy"
                 decoding="async"
               />
               <img className="glazing-window-watermark" src={sokolLogo} alt="" aria-hidden="true" />
-              <figcaption className="glazing-photo-credit">
-                <a
-                  href="https://commons.wikimedia.org/wiki/File:Muzeum_Sztuki_Nowoczesnej,_wn%C4%99trza,_okno_w_holu_015,_KsP_listopad_2024.jpg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Фото: Krzysztof Popławski · Wikimedia Commons · CC BY 4.0
-                </a>
-              </figcaption>
             </figure>
             <p className="glazing-intro-copy" data-testid="text-glazing-disclaimer">
               ЗМК СМС-РЕСУРС не изготавливает окна и стеклянные изделия
@@ -647,7 +636,15 @@ function Cases() {
             <article className={`case-card ${item.className} reveal delay-${Math.min(index, 3)}`} key={item.number} data-testid={`card-case-${item.number}`}>
               <span className="case-number">{item.number}</span>
               <span className="case-type">{item.type}</span>
-              <h3>{item.title}</h3>
+              <h3>
+                {item.number === '04' ? (
+                  <>
+                    <span className="case-title-nowrap">Золотодобывающее</span>
+                    <br />
+                    предприятие
+                  </>
+                ) : item.title}
+              </h3>
             </article>
           ))}
         </div>

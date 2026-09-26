@@ -406,8 +406,8 @@ a {
 
 .hero {
   position: relative;
-  min-height: min(850px, 100vh);
-  padding: 180px 5vw 92px;
+  min-height: min(790px, 100vh);
+  padding: 150px 5vw 82px;
   background: var(--ink);
   color: var(--cream);
 }
@@ -829,18 +829,20 @@ a {
   position: absolute;
   z-index: 1;
   inset: 0;
-  background: linear-gradient(180deg, rgba(12, 20, 26, 0.04) 48%, rgba(12, 20, 26, 0.45) 100%);
+  background: linear-gradient(180deg, rgba(12, 20, 26, 0.02) 55%, rgba(12, 20, 26, 0.3) 100%);
   content: '';
   pointer-events: none;
 }
 
 .glazing-window-photo {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: -2%;
+  left: -4%;
+  width: 107%;
+  height: 108%;
+  max-width: none;
   object-fit: cover;
-  object-position: center 48%;
+  object-position: 56% 50%;
 }
 
 .glazing-window-watermark {
@@ -850,34 +852,10 @@ a {
   left: 50%;
   width: clamp(150px, 36%, 250px);
   height: auto;
-  opacity: 0.28;
+  opacity: 0.43;
   pointer-events: none;
   filter: drop-shadow(0 1px 7px rgba(6, 12, 16, 0.55));
   transform: translate(-50%, -50%);
-}
-
-.glazing-photo-credit {
-  position: absolute;
-  z-index: 3;
-  right: 13px;
-  bottom: 11px;
-  left: 13px;
-  color: rgba(255, 250, 241, 0.9);
-  font-family: var(--app-font-mono);
-  font-size: 8px;
-  line-height: 1.4;
-  letter-spacing: 0.02em;
-  text-align: right;
-}
-
-.glazing-photo-credit a {
-  color: inherit;
-  text-decoration: none;
-  text-underline-offset: 3px;
-}
-
-.glazing-photo-credit a:hover {
-  text-decoration: underline;
 }
 
 .glazing-intro .glazing-intro-copy {
@@ -1418,6 +1396,11 @@ a {
   font-family: var(--app-font-serif);
   font-size: clamp(30px, 3.1vw, 47px);
   line-height: 0.92;
+}
+
+.case-title-nowrap {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .workflow-section {
@@ -2152,7 +2135,7 @@ a {
 
   .hero {
     min-height: auto;
-    padding: 140px 20px 72px;
+    padding: 118px 20px 64px;
   }
 
   .hero::before {
@@ -2385,6 +2368,10 @@ a {
     max-width: 100%;
     font-size: clamp(32px, 10vw, 50px);
     line-height: 0.96;
+  }
+
+  .case-card.wide h3 {
+    font-size: clamp(24px, 7.5vw, 32px);
   }
 
   .workflow-line {
