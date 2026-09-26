@@ -449,19 +449,39 @@ function Glazing() {
   return (
     <section className="section glazing-section" id="glazing" data-testid="section-glazing">
       <div className="section-inner">
-        <div className="section-heading reveal">
+        <div className="section-heading glazing-heading reveal">
           <div className="glazing-heading-title">
-            <img className="glazing-watermark" src={sokolLogo} alt="" aria-hidden="true" />
             <span className="eyebrow">02 / Партнёрские решения</span>
             <h2 className="display">Окна, двери<br />и перегородки.</h2>
           </div>
-          <p>
-            ЗМК СМС-РЕСУРС не изготавливает окна и стеклянные изделия
-            самостоятельно. Под задачу проекта можем рекомендовать наших
-            партнёров по изготовлению и поставке окон, дверей, стеклопакетов и
-            перегородок, а также помочь с подбором решения по рабочей
-            документации.
-          </p>
+          <div className="glazing-intro">
+            <figure className="glazing-visual" data-testid="image-glazing-window">
+              <img
+                className="glazing-window-photo"
+                src={`${assetBase}images/window-glazing.jpg`}
+                alt="Прозрачное панорамное окно с видом на город"
+                loading="lazy"
+                decoding="async"
+              />
+              <img className="glazing-window-watermark" src={sokolLogo} alt="" aria-hidden="true" />
+              <figcaption className="glazing-photo-credit">
+                <a
+                  href="https://commons.wikimedia.org/wiki/File:Muzeum_Sztuki_Nowoczesnej,_wn%C4%99trza,_okno_w_holu_015,_KsP_listopad_2024.jpg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Фото: Krzysztof Popławski · Wikimedia Commons · CC BY 4.0
+                </a>
+              </figcaption>
+            </figure>
+            <p className="glazing-intro-copy" data-testid="text-glazing-disclaimer">
+              ЗМК СМС-РЕСУРС не изготавливает окна и стеклянные изделия
+              самостоятельно. Под задачу проекта можем рекомендовать наших
+              партнёров по изготовлению и поставке окон, дверей, стеклопакетов и
+              перегородок, а также помочь с подбором решения по рабочей
+              документации.
+            </p>
+          </div>
         </div>
         <div className="glazing-grid">
           {glazingServices.map((service, index) => {

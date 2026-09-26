@@ -799,28 +799,93 @@ a {
   background: var(--cream);
 }
 
-.glazing-heading-title {
-  position: relative;
-  isolation: isolate;
+.section-heading.glazing-heading {
+  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+  align-items: start;
 }
 
-.glazing-watermark {
+.glazing-heading-title {
+  position: relative;
+}
+
+.glazing-intro {
+  display: grid;
+  min-width: 0;
+  gap: 17px;
+}
+
+.glazing-visual {
+  position: relative;
+  isolation: isolate;
+  min-height: 250px;
+  margin: 0;
+  overflow: hidden;
+  aspect-ratio: 1.62;
+  background: #d8dedf;
+  border: 1px solid rgba(16, 25, 32, 0.12);
+}
+
+.glazing-visual::after {
   position: absolute;
-  z-index: 0;
-  top: 52%;
-  left: 45%;
-  width: clamp(230px, 28vw, 350px);
-  max-width: 82%;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12, 20, 26, 0.04) 48%, rgba(12, 20, 26, 0.45) 100%);
+  content: '';
+  pointer-events: none;
+}
+
+.glazing-window-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+}
+
+.glazing-window-watermark {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  width: clamp(150px, 36%, 250px);
   height: auto;
   opacity: 0.28;
   pointer-events: none;
+  filter: drop-shadow(0 1px 7px rgba(6, 12, 16, 0.55));
   transform: translate(-50%, -50%);
 }
 
-.glazing-heading-title .eyebrow,
-.glazing-heading-title h2 {
-  position: relative;
-  z-index: 1;
+.glazing-photo-credit {
+  position: absolute;
+  z-index: 3;
+  right: 13px;
+  bottom: 11px;
+  left: 13px;
+  color: rgba(255, 250, 241, 0.9);
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-align: right;
+}
+
+.glazing-photo-credit a {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.glazing-photo-credit a:hover {
+  text-decoration: underline;
+}
+
+.glazing-intro .glazing-intro-copy {
+  max-width: 100%;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: clamp(15px, 1.2vw, 17px);
+  line-height: 1.68;
 }
 
 .glazing-grid {
@@ -2383,6 +2448,19 @@ a {
 
   .glazing-card {
     min-height: 255px;
+  }
+
+  .glazing-intro {
+    margin-top: 23px;
+  }
+
+  .glazing-visual {
+    min-height: 220px;
+    aspect-ratio: 1.38;
+  }
+
+  .glazing-window-watermark {
+    width: min(60%, 220px);
   }
 
   .glazing-card h3 {
