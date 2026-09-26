@@ -160,7 +160,7 @@ function Header() {
       <div className="header-inner">
         <a href="#top" className="brand-lockup" onClick={closeMenu} data-testid="link-brand">
           <img src={`${assetBase}brand/sms-resurs-logo.svg`} alt="ЗМК СМС-РЕСУРС" />
-          <span className="brand-caption">Стальные решения<br />Новосибирск</span>
+          <span className="brand-caption">Стальные решения г. Новосибирск</span>
         </a>
         <nav className="main-nav" aria-label="Основная навигация">
           <a href="#services" data-testid="link-services">Возможности</a>

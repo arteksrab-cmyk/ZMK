@@ -157,9 +157,9 @@ a {
   font-size: 9px;
   font-weight: 600;
   line-height: 1.25;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.04em;
   text-shadow: 0 0 8px rgba(255, 250, 241, 0.14);
-  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .main-nav {
@@ -1732,7 +1732,7 @@ a {
   transition-delay: 240ms;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   :root {
     --section-title-size: clamp(2.4rem, 5.3vw, 3.25rem);
   }
@@ -1777,6 +1777,10 @@ a {
     gap: 30px;
   }
 
+  .hero h1 {
+    font-size: clamp(56px, 7.2vw, 88px);
+  }
+
   .hero-visual {
     min-height: 400px;
   }
@@ -1786,7 +1790,7 @@ a {
   }
 
   .glazing-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .service-card.featured {
@@ -2006,6 +2010,7 @@ a {
   }
 
   .services-grid,
+  .glazing-grid,
   .structures-layout,
   .fire-grid,
   .panels-layout,
