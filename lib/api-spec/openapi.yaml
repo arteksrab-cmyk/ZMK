@@ -31,11 +31,11 @@ paths:
       operationId: submitLead
       tags: [leads]
       summary: Submit a project request
-      description: Sends a project request to the configured business mailbox.
+      description: Sends a project request and optional project files to the configured business mailbox. Attach up to 5 PDF or Word files, with a combined size no greater than 18 MB.
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: "#/components/schemas/LeadSubmissionInput"
       responses:
@@ -47,6 +47,12 @@ paths:
                 $ref: "#/components/schemas/LeadSubmissionResult"
         "400":
           description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "413":
+          description: Attachment request exceeds the supported size
           content:
             application/json:
               schema:
@@ -91,6 +97,13 @@ components:
         details:
           type: string
           maxLength: 4000
+        files:
+          type: array
+          maxItems: 5
+          description: Optional PDF or Word project files, up to 18 MB combined.
+          items:
+            type: string
+            format: binary
     LeadSubmissionResult:
       type: object
       properties:

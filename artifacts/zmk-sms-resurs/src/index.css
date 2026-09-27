@@ -1745,6 +1745,136 @@ a {
   font-size: 10px;
 }
 
+.file-upload-field {
+  gap: 10px;
+}
+
+.file-upload-heading {
+  margin: 0;
+  color: rgba(255, 250, 241, 0.56);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.field .file-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.field .file-upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 10px 13px;
+  border: 1px solid rgba(255, 250, 241, 0.38);
+  color: var(--cream);
+  font-family: var(--app-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
+  text-align: left;
+  text-transform: none;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease, background 180ms ease;
+}
+
+.field .file-upload-button:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: rgba(238, 89, 13, 0.08);
+}
+
+.file-upload-input:focus-visible + .file-upload-button {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+
+.file-upload-input:disabled + .file-upload-button {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.file-upload-help,
+.file-upload-total {
+  margin: 0;
+  color: rgba(255, 250, 241, 0.48);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.file-upload-total {
+  color: rgba(255, 250, 241, 0.76);
+}
+
+.file-upload-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.file-upload-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 36px;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 250, 241, 0.12);
+}
+
+.file-upload-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--cream);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.file-upload-size {
+  color: rgba(255, 250, 241, 0.5);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.file-remove-button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid rgba(255, 250, 241, 0.2);
+  background: transparent;
+  color: rgba(255, 250, 241, 0.68);
+  cursor: pointer;
+}
+
+.file-remove-button:hover:not(:disabled),
+.file-remove-button:focus-visible {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.file-remove-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .form-footer {
   display: flex;
   align-items: center;

@@ -23,6 +23,11 @@ export interface LeadSubmissionInput {
   email: string;
   /** @maxLength 4000 */
   details: string;
+  /**
+     * Optional PDF or Word project files, up to 18 MB combined.
+     * @maxItems 5
+     */
+  files?: Blob[];
 }
 
 export type LeadSubmissionResultStatus = typeof LeadSubmissionResultStatus[keyof typeof LeadSubmissionResultStatus];

@@ -1,12 +1,53 @@
-import { Router, type IRouter } from "express";
+import express, { Router, type IRouter, type RequestHandler } from "express";
 import nodemailer from "nodemailer";
 import { SubmitLeadBody, SubmitLeadResponse } from "@workspace/api-zod";
+import {
+  maxLeadRequestSize,
+  parseLeadSubmissionRequest,
+} from "../lib/lead-submission";
 
 const router: IRouter = Router();
 const recipient = "zmksmsresurs@gmail.com";
+const multipartBodyParser = express.raw({
+  type: "multipart/form-data",
+  limit: maxLeadRequestSize,
+});
 
-router.post("/leads", async (req, res): Promise<void> => {
-  const parsed = SubmitLeadBody.safeParse(req.body);
+const parseMultipartBody: RequestHandler = (req, res, next) => {
+  if (!req.is("multipart/form-data")) {
+    next();
+    return;
+  }
+
+  multipartBodyParser(req, res, (error) => {
+    if (!error) {
+      next();
+      return;
+    }
+
+    const errorType =
+      typeof error === "object" && error !== null && "type" in error
+        ? (error as { type?: unknown }).type
+        : undefined;
+    const tooLarge = errorType === "entity.too.large";
+    req.log.warn({ err: error }, "Invalid lead upload request");
+    res.status(tooLarge ? 413 : 400).json({
+      error: tooLarge
+        ? "Суммарный размер файлов не должен превышать 18 МБ."
+        : "Не удалось прочитать форму. Проверьте файлы и повторите отправку.",
+    });
+  });
+};
+
+router.post("/leads", parseMultipartBody, async (req, res): Promise<void> => {
+  const submission = await parseLeadSubmissionRequest(req);
+  if (!submission.ok) {
+    req.log.warn({ status: submission.status }, "Invalid lead submission");
+    res.status(submission.status).json({ error: submission.error });
+    return;
+  }
+
+  const parsed = SubmitLeadBody.safeParse(submission.value);
   if (!parsed.success) {
     req.log.warn({ errors: parsed.error.message }, "Invalid lead submission");
     res.status(400).json({ error: "Проверьте заполнение формы." });
@@ -49,6 +90,7 @@ router.post("/leads", async (req, res): Promise<void> => {
       replyTo: email || undefined,
       subject: `Заявка на расчёт от ${name}`,
       text,
+      attachments: submission.attachments,
     });
 
     req.log.info("Lead email sent");

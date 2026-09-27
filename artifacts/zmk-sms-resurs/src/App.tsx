@@ -1,4 +1,4 @@
-import { type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react';
+import { type ChangeEvent, type FormEvent, type ReactNode, useEffect, useRef, useState } from 'react';
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -11,6 +11,7 @@ import {
   MapPin,
   MessageCircle,
   Menu,
+  Paperclip,
   Phone,
   Send,
   ShieldCheck,
@@ -51,6 +52,16 @@ const initialForm: LeadForm = {
   email: '',
   details: '',
 };
+
+const projectFileLimit = 5;
+const projectFileSizeLimit = 18_000_000;
+const projectFileExtension = /\.(pdf|doc|docx)$/i;
+
+const formatProjectFileSize = (bytes: number) =>
+  `${(bytes / 1_000_000).toLocaleString('ru-RU', { maximumFractionDigits: 1 })} МБ`;
+
+const projectFilesWord = (count: number) =>
+  count === 1 ? 'файл' : count < 5 ? 'файла' : 'файлов';
 
 const services = [
   {
@@ -782,6 +793,8 @@ function SearchFaq() {
 
 function ContactForm() {
   const [form, setForm] = useState<LeadForm>(initialForm);
+  const [projectFiles, setProjectFiles] = useState<File[]>([]);
+  const [projectFileError, setProjectFileError] = useState('');
   const [errors, setErrors] = useState<Partial<Record<keyof LeadForm, string>>>({});
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -790,6 +803,51 @@ function ContactForm() {
   const updateField = (field: keyof LeadForm, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
+    setSubmitError('');
+  };
+
+  const handleProjectFilesChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    const incomingFiles = Array.from(input.files ?? []);
+    input.value = '';
+    if (incomingFiles.length === 0) return;
+
+    const invalidFile = incomingFiles.find((file) => !projectFileExtension.test(file.name));
+    if (invalidFile) {
+      setProjectFileError(`Файл «${invalidFile.name}» должен быть PDF или Word (.doc/.docx).`);
+      setSubmitError('');
+      return;
+    }
+
+    const emptyFile = incomingFiles.find((file) => file.size === 0);
+    if (emptyFile) {
+      setProjectFileError(`Файл «${emptyFile.name}» пустой. Выберите другой файл.`);
+      setSubmitError('');
+      return;
+    }
+
+    const nextFiles = [...projectFiles, ...incomingFiles];
+    if (nextFiles.length > projectFileLimit) {
+      setProjectFileError('Можно загрузить не более 5 файлов.');
+      setSubmitError('');
+      return;
+    }
+
+    const totalSize = nextFiles.reduce((total, file) => total + file.size, 0);
+    if (totalSize > projectFileSizeLimit) {
+      setProjectFileError('Суммарный размер файлов не должен превышать 18 МБ.');
+      setSubmitError('');
+      return;
+    }
+
+    setProjectFiles(nextFiles);
+    setProjectFileError('');
+    setSubmitError('');
+  };
+
+  const removeProjectFile = (fileIndex: number) => {
+    setProjectFiles((current) => current.filter((_, index) => index !== fileIndex));
+    setProjectFileError('');
     setSubmitError('');
   };
 
@@ -803,11 +861,12 @@ function ContactForm() {
     }
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
+    if (projectFileError) return;
     setSending(true);
     setSubmitError('');
 
     try {
-      await submitLead(form);
+      await submitLead({ ...form, files: projectFiles });
       setSent(true);
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : 'Не удалось отправить заявку. Попробуйте ещё раз.');
@@ -825,8 +884,12 @@ function ContactForm() {
       <div className="lead-form form-success" data-testid="form-success">
         <CheckCircle2 size={30} color="var(--orange)" />
         <strong>Запрос принят.</strong>
-        <p>Мы получили данные на этой странице. Для быстрой отправки можно открыть письмо — поля уже будут заполнены.</p>
-        <a href={mailto} data-testid="link-mailto-fallback">Открыть письмо в почте <ArrowUpRight size={14} /></a>
+        <p>
+          Данные{projectFiles.length > 0 ? ' и проектные файлы' : ''} отправлены на почту СМС-РЕСУРС.
+        </p>
+        {projectFiles.length === 0 && (
+          <a href={mailto} data-testid="link-mailto-fallback">Открыть письмо в почте <ArrowUpRight size={14} /></a>
+        )}
       </div>
     );
   }
@@ -857,8 +920,59 @@ function ContactForm() {
         <label htmlFor="lead-details">Что нужно рассчитать</label>
         <textarea id="lead-details" value={form.details} onChange={(event) => updateField('details', event.target.value)} placeholder="Тип объекта, объём, сроки и требования к работам. Есть ли рабочие чертежи (КМ/КМД)" data-testid="input-lead-details" />
       </div>
+      <div className="field file-upload-field">
+        <p className="file-upload-heading">Файлы проекта (необязательно)</p>
+        <input
+          id="lead-project-files"
+          className="file-upload-input"
+          type="file"
+          accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          multiple
+          disabled={sending}
+          aria-describedby={projectFileError ? 'lead-project-files-help lead-project-files-error' : 'lead-project-files-help'}
+          onChange={handleProjectFilesChange}
+          data-testid="input-lead-project-files"
+        />
+        <label className="file-upload-button" htmlFor="lead-project-files" data-testid="button-upload-project">
+          <Paperclip size={16} />
+          Загрузить проект (КМ/КМД/КР)
+        </label>
+        <p className="file-upload-help" id="lead-project-files-help">
+          PDF, DOC или DOCX. До 5 файлов, суммарно до 18 МБ.
+        </p>
+        {projectFiles.length > 0 && (
+          <>
+            <p className="file-upload-total" aria-live="polite">
+              Выбрано {projectFiles.length} {projectFilesWord(projectFiles.length)} · {formatProjectFileSize(projectFiles.reduce((total, file) => total + file.size, 0))}
+            </p>
+            <ul className="file-upload-list" aria-label="Выбранные файлы проекта">
+              {projectFiles.map((file, index) => (
+                <li className="file-upload-item" key={`${file.name}-${file.lastModified}-${index}`}>
+                  <span className="file-upload-name" title={file.name}>{file.name}</span>
+                  <span className="file-upload-size">{formatProjectFileSize(file.size)}</span>
+                  <button
+                    className="file-remove-button"
+                    type="button"
+                    aria-label={`Удалить файл ${file.name}`}
+                    disabled={sending}
+                    onClick={() => removeProjectFile(index)}
+                    data-testid={`button-remove-project-file-${index}`}
+                  >
+                    <X size={14} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {projectFileError && (
+          <span className="field-error" id="lead-project-files-error" role="alert">
+            {projectFileError}
+          </span>
+        )}
+      </div>
       <div className="form-footer">
-        <span className="form-agreement">Нажимая кнопку, вы соглашаетесь на обработку обращения для подготовки ответа. Для проекта действует режим неразглашения по договорённости.</span>
+        <span className="form-agreement">Нажимая кнопку, вы соглашаетесь на обработку обращения и приложенных документов для подготовки ответа. Для проекта действует режим неразглашения по договорённости.</span>
         <button className="button-primary" type="submit" disabled={sending} data-testid="button-submit-lead">
           {sending ? 'Отправляем…' : 'Отправить запрос'} <Send size={15} />
         </button>

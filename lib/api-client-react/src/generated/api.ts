@@ -140,31 +140,26 @@ export const getSubmitLeadUrl = () => {
 }
 
 /**
- * Sends a project request to the configured business mailbox.
+ * Sends a project request and optional project files to the configured business mailbox. Attach up to 5 PDF or Word files, with a combined size no greater than 18 MB.
  * @summary Submit a project request
  */
 export const submitLead = async (leadSubmissionInput: LeadSubmissionInput, options?: Parameters<typeof customFetch>[1]): Promise<LeadSubmissionResult> => {
+    const formData = new FormData();
+formData.append(`name`, leadSubmissionInput.name);
+formData.append(`company`, leadSubmissionInput.company);
+formData.append(`phone`, leadSubmissionInput.phone);
+formData.append(`email`, leadSubmissionInput.email);
+formData.append(`details`, leadSubmissionInput.details);
+if(leadSubmissionInput.files !== undefined) {
+ leadSubmissionInput.files.forEach(value => formData.append(`files`, value));
+ }
 
-    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
-    if (!h) return {};
-    if (h instanceof Headers) return Object.fromEntries(h.entries());
-    if (Symbol.iterator in h) {
-      return Object.fromEntries(
-        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
-      );
-    }
-    const headers: Record<string, string | readonly string[]> = {};
-    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
-      if (value !== undefined) headers[name] = value;
-    }
-    return headers;
-  };
-return customFetch<LeadSubmissionResult>(getSubmitLeadUrl(),
+  return customFetch<LeadSubmissionResult>(getSubmitLeadUrl(),
   {
     ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
-    body: JSON.stringify(leadSubmissionInput)
+    method: 'POST'
+    ,
+    body: formData
   }
 );}
 

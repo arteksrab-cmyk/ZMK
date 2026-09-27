@@ -18,7 +18,7 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
- * Sends a project request to the configured business mailbox.
+ * Sends a project request and optional project files to the configured business mailbox. Attach up to 5 PDF or Word files, with a combined size no greater than 18 MB.
  * @summary Submit a project request
  */
 export const submitLeadBodyNameMax = 160;
@@ -31,6 +31,8 @@ export const submitLeadBodyEmailMax = 254;
 
 export const submitLeadBodyDetailsMax = 4000;
 
+export const submitLeadBodyFilesMax = 5;
+
 
 
 export const SubmitLeadBody = zod.object({
@@ -38,7 +40,8 @@ export const SubmitLeadBody = zod.object({
   "company": zod.string().max(submitLeadBodyCompanyMax),
   "phone": zod.string().max(submitLeadBodyPhoneMax),
   "email": zod.string().max(submitLeadBodyEmailMax),
-  "details": zod.string().max(submitLeadBodyDetailsMax)
+  "details": zod.string().max(submitLeadBodyDetailsMax),
+  "files": zod.array(zod.instanceof(Blob)).max(submitLeadBodyFilesMax).optional().describe('Optional PDF or Word project files, up to 18 MB combined.')
 })
 
 export const SubmitLeadResponse = zod.object({
