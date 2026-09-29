@@ -20,6 +20,7 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { submitLead } from '@workspace/api-client-react';
 import { ErrorBoundary } from '@/components/error-boundary';
+import { Interactive3DModel } from '@/components/interactive-3d-model';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
@@ -379,8 +380,13 @@ function Hero() {
             <ShieldCheck size={15} /> Работаем по проектной документации и заданию заказчика
           </div>
         </div>
-        <div className="hero-visual reveal delay-2" aria-label="Схематичный образ стальной конструкции">
+        <div
+          className="hero-visual reveal delay-2"
+          role="group"
+          aria-label="Интерактивная 3D-модель стального каркаса"
+        >
           <div className="hero-plate" />
+          <Interactive3DModel kind="warehouse" context="hero" />
           <div className="hero-visual-mark">
             <img src={`${assetBase}brand/sms-resurs-mark.svg`} alt="" />
           </div>
@@ -533,11 +539,7 @@ function SandwichPanels() {
             <span className="eyebrow">Дилерская поставка</span>
             <strong>от 500 м²</strong>
           </div>
-          <div className="panel-stack" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
+          <Interactive3DModel kind="panel" context="panel" />
           <div className="panels-specs">
             {specifications.map((item) => (
               <div className="panels-spec" key={item.label}>

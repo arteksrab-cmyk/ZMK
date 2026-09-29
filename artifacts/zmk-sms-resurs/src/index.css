@@ -541,6 +541,7 @@ a {
 
 .hero-plate {
   position: absolute;
+  z-index: 0;
   top: 2%;
   right: 0;
   width: 87%;
@@ -558,6 +559,7 @@ a {
 }
 
 .hero-plate::after {
+  display: none;
   position: absolute;
   top: 18%;
   right: 12%;
@@ -570,6 +572,7 @@ a {
 
 .hero-visual-mark {
   position: absolute;
+  z-index: 4;
   top: 20%;
   left: 4%;
   width: 145px;
@@ -588,6 +591,7 @@ a {
 
 .visual-tag {
   position: absolute;
+  z-index: 4;
   bottom: 11%;
   left: 14%;
   padding: 14px 17px;
@@ -604,6 +608,128 @@ a {
   display: block;
   color: var(--orange);
   font-size: 18px;
+}
+
+.interactive-3d-model {
+  position: relative;
+  isolation: isolate;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--cream);
+}
+
+.interactive-3d-model--hero {
+  position: absolute;
+  z-index: 2;
+  top: 5%;
+  right: 0;
+  bottom: 17%;
+  left: 12%;
+  overflow: visible;
+}
+
+.interactive-3d-model--panel {
+  height: 215px;
+  margin: 28px 0 30px;
+  border: 1px solid rgba(255, 250, 241, 0.2);
+  background: linear-gradient(145deg, rgba(255, 250, 241, 0.085), rgba(255, 250, 241, 0.012) 64%);
+}
+
+.interactive-3d-model__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: none;
+  outline: none;
+}
+
+.interactive-3d-model__canvas:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: -2px;
+}
+
+.interactive-3d-model.is-dragging .interactive-3d-model__canvas {
+  cursor: grabbing;
+}
+
+.interactive-3d-model__badge {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 9px;
+  border: 1px solid rgba(255, 250, 241, 0.2);
+  background: rgba(17, 28, 38, 0.86);
+  color: rgba(255, 250, 241, 0.76);
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.interactive-3d-model__badge svg,
+.interactive-3d-model__badge strong {
+  color: var(--orange);
+}
+
+.interactive-3d-model__badge strong {
+  font-size: 11px;
+}
+
+.interactive-3d-model__badge span {
+  white-space: nowrap;
+}
+
+.interactive-3d-model__note {
+  position: absolute;
+  z-index: 1;
+  bottom: 10px;
+  left: 11px;
+  color: rgba(255, 250, 241, 0.66);
+  font-family: var(--app-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.025em;
+  pointer-events: none;
+}
+
+.interactive-3d-model__controls {
+  position: absolute;
+  z-index: 2;
+  right: 9px;
+  bottom: 9px;
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid rgba(255, 250, 241, 0.18);
+  background: rgba(17, 28, 38, 0.86);
+}
+
+.interactive-3d-model__controls button {
+  display: inline-grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--cream);
+  cursor: pointer;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.interactive-3d-model__controls button:hover {
+  background: rgba(238, 89, 13, 0.16);
+  color: var(--orange);
+}
+
+.interactive-3d-model__controls button:focus-visible {
+  outline: 1px solid var(--orange);
+  outline-offset: -1px;
 }
 
 .scroll-marker {
@@ -1018,58 +1144,6 @@ a {
   letter-spacing: -0.03em;
   line-height: 0.8;
   white-space: nowrap;
-}
-
-.panel-stack {
-  position: relative;
-  min-height: 215px;
-  margin: 28px 0 30px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 250, 241, 0.18);
-  background: linear-gradient(145deg, rgba(255, 250, 241, 0.09), transparent 58%);
-}
-
-.panel-stack::before,
-.panel-stack::after,
-.panel-stack span {
-  position: absolute;
-  right: 10%;
-  left: 10%;
-  height: 48px;
-  border: 1px solid rgba(238, 89, 13, 0.74);
-  background: linear-gradient(90deg, rgba(238, 89, 13, 0.3), rgba(255, 250, 241, 0.07));
-  content: '';
-  transform: skewY(-8deg);
-}
-
-.panel-stack::before {
-  top: 24%;
-}
-
-.panel-stack span:nth-child(1) {
-  top: 39%;
-  opacity: 0.75;
-}
-
-.panel-stack span:nth-child(2) {
-  top: 54%;
-  opacity: 0.5;
-}
-
-.panel-stack span:nth-child(3) {
-  top: 69%;
-  opacity: 0.28;
-}
-
-.panel-stack::after {
-  top: 31%;
-  right: 18%;
-  left: 18%;
-  height: 1px;
-  border: 0;
-  background: var(--orange);
-  box-shadow: 0 15px 0 rgba(238, 89, 13, 0.65), 0 30px 0 rgba(238, 89, 13, 0.4);
-  transform: skewY(-8deg);
 }
 
 .panels-specs {
@@ -2333,6 +2407,7 @@ a {
   }
 
   .hero-visual-mark {
+    z-index: 4;
     top: 14%;
     left: 5%;
     width: 100px;
@@ -2341,6 +2416,7 @@ a {
   }
 
   .visual-tag {
+    z-index: 4;
     bottom: 0;
     left: 12%;
     font-size: 8px;
@@ -2446,8 +2522,31 @@ a {
     font-size: 42px;
   }
 
-  .panel-stack {
-    min-height: 190px;
+  .interactive-3d-model--hero {
+    top: 1%;
+    right: -1%;
+    bottom: 12%;
+    left: 17%;
+  }
+
+  .interactive-3d-model--panel {
+    height: 190px;
+    margin: 24px 0 22px;
+  }
+
+  .interactive-3d-model__badge {
+    top: 8px;
+    right: 8px;
+    padding: 7px 8px;
+  }
+
+  .interactive-3d-model__badge span {
+    display: none;
+  }
+
+  .interactive-3d-model__controls {
+    right: 7px;
+    bottom: 7px;
   }
 
   .panels-specs {
