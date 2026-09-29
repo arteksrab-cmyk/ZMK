@@ -90,7 +90,8 @@ function addSash(
   hingeX: number,
   hingeZ: number,
   angle: number,
-  handleX: number,
+  handleX: number | null,
+  handleDirection: -1 | 1 = 1,
 ) {
   const bottom = -1.48;
   const top = 1.48;
@@ -101,9 +102,11 @@ function addSash(
   addRotatedBar(faces, [right, bottom, z + 0.05], [right, top, z + 0.05], 0.14, 0.14, framePalette, hingeX, hingeZ, angle);
   addRotatedBar(faces, [left, bottom, z + 0.05], [right, bottom, z + 0.05], 0.14, 0.14, framePalette, hingeX, hingeZ, angle);
   addRotatedBar(faces, [left, top, z + 0.05], [right, top, z + 0.05], 0.14, 0.14, framePalette, hingeX, hingeZ, angle);
-  addRotatedBar(faces, [handleX, -0.05, z + 0.13], [handleX, 0.22, z + 0.13], 0.06, 0.08, darkFramePalette, hingeX, hingeZ, angle);
-  const leverEndX = handleX < (left + right) / 2 ? handleX - 0.15 : handleX + 0.15;
-  addRotatedBar(faces, [handleX, 0.17, z + 0.13], [leverEndX, 0.17, z + 0.13], 0.07, 0.08, darkFramePalette, hingeX, hingeZ, angle);
+  if (handleX !== null) {
+    addRotatedBar(faces, [handleX, -0.05, z + 0.13], [handleX, 0.22, z + 0.13], 0.06, 0.08, darkFramePalette, hingeX, hingeZ, angle);
+    const leverEndX = handleX + handleDirection * 0.15;
+    addRotatedBar(faces, [handleX, 0.17, z + 0.13], [leverEndX, 0.17, z + 0.13], 0.07, 0.08, darkFramePalette, hingeX, hingeZ, angle);
+  }
 }
 
 function buildFacadeScene(isOpen: boolean): Face[] {
@@ -120,9 +123,9 @@ function buildFacadeScene(isOpen: boolean): Face[] {
   addBox(faces, [0, -1.9, 0.5], [5.6, 0.22, 0.75], framePalette);
   addBox(faces, [0, -2.25, 0.02], [6.25, 0.12, 0.68], darkFramePalette);
   const hingeZ = 0.48;
-  const openingAngle = isOpen ? 1.05 : 0;
-  addSash(faces, -2.43, -0.09, -0.09, hingeZ, 0, -2.25);
-  addSash(faces, 0.09, 2.43, 0.09, hingeZ, openingAngle, 2.25);
+  const openingAngle = isOpen ? -1.05 : 0;
+  addSash(faces, -2.43, -0.09, -0.09, hingeZ, 0, null);
+  addSash(faces, 0.09, 2.43, 2.43, hingeZ, openingAngle, 0.09, 1);
   return faces;
 }
 
