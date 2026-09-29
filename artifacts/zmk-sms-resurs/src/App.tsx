@@ -19,6 +19,14 @@ import {
 } from 'lucide-react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { submitLead } from '@workspace/api-client-react';
+import {
+  defaultRalColor,
+  insulationOptions,
+  panelTypeOptions,
+  ralColors,
+  type InsulationType,
+  type PanelType,
+} from '@/data/panel-catalog';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Interactive3DModel } from '@/components/interactive-3d-model';
 import { Toaster } from '@/components/ui/toaster';
@@ -512,6 +520,9 @@ function Glazing() {
 }
 
 function SandwichPanels() {
+  const [panelType, setPanelType] = useState<PanelType>('wall');
+  const [insulation, setInsulation] = useState<InsulationType>('mineral-wool');
+  const [selectedRal, setSelectedRal] = useState(defaultRalColor);
   const specifications = [
     { value: 'Любая', label: 'толщина панели' },
     { value: 'Любое', label: 'наполнение под задачу' },
@@ -539,7 +550,85 @@ function SandwichPanels() {
             <span className="eyebrow">Дилерская поставка</span>
             <strong>от 500 м²</strong>
           </div>
-          <Interactive3DModel kind="panel" context="panel" />
+          <Interactive3DModel
+            kind="panel"
+            context="panel"
+            panelType={panelType}
+            insulation={insulation}
+            steelColor={selectedRal.hex}
+            ralCode={`RAL ${selectedRal.code}`}
+          />
+          <div className="panel-configurator" data-testid="panel-configurator">
+            <div className="panel-configurator__group">
+              <span className="panel-configurator__label">Тип панели</span>
+              <div className="panel-configurator__options panel-configurator__options--types" role="group" aria-label="Тип сэндвич-панели">
+                {panelTypeOptions.map((option) => (
+                  <button
+                    className={`panel-configurator__option${panelType === option.id ? ' is-selected' : ''}`}
+                    type="button"
+                    aria-pressed={panelType === option.id}
+                    data-testid={`button-panel-type-${option.id}`}
+                    key={option.id}
+                    onClick={() => setPanelType(option.id)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="panel-configurator__group">
+              <span className="panel-configurator__label">Наполнение</span>
+              <div className="panel-configurator__options panel-configurator__options--insulation" role="group" aria-label="Материал наполнения">
+                {insulationOptions.map((option) => (
+                  <button
+                    className={`panel-configurator__option${insulation === option.id ? ' is-selected' : ''}`}
+                    type="button"
+                    aria-pressed={insulation === option.id}
+                    data-testid={`button-panel-insulation-${option.id}`}
+                    key={option.id}
+                    onClick={() => setInsulation(option.id)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <details className="panel-ral-picker" data-testid="panel-ral-picker">
+              <summary className="panel-ral-picker__summary" data-testid="button-panel-ral-toggle">
+                <span className="panel-ral-picker__current-swatch" style={{ backgroundColor: selectedRal.hex }} aria-hidden="true" />
+                <span className="panel-ral-picker__current-copy">
+                  <strong>Выбрать RAL</strong>
+                  <small>RAL {selectedRal.code} · {selectedRal.name}</small>
+                </span>
+                <span className="panel-ral-picker__chevron" aria-hidden="true">⌄</span>
+              </summary>
+              <div className="panel-ral-picker__menu">
+                <p>Цвета из таблицы дилера. На экране оттенок может отличаться от реального.</p>
+                <div className="panel-ral-picker__swatches" role="group" aria-label="Цвет металла RAL">
+                  {ralColors.map((color) => (
+                    <button
+                      className={`panel-ral-picker__swatch${selectedRal.code === color.code ? ' is-selected' : ''}`}
+                      type="button"
+                      aria-label={`RAL ${color.code} — ${color.name}`}
+                      aria-pressed={selectedRal.code === color.code}
+                      data-testid={`button-panel-ral-${color.code}`}
+                      key={color.code}
+                      onClick={(event) => {
+                        setSelectedRal(color);
+                        event.currentTarget.closest('details')?.removeAttribute('open');
+                      }}
+                    >
+                      <span className="panel-ral-picker__swatch-color" style={{ backgroundColor: color.hex }} aria-hidden="true" />
+                      <span className="panel-ral-picker__swatch-code">RAL {color.code}</span>
+                      <span className="panel-ral-picker__swatch-name">{color.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </details>
+          </div>
           <div className="panels-specs">
             {specifications.map((item) => (
               <div className="panels-spec" key={item.label}>

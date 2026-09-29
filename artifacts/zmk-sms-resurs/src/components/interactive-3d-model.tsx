@@ -1,17 +1,12 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type WheelEvent } from 'react';
 import { Box, Minus, Plus, RotateCcw } from 'lucide-react';
+import { defaultRalColor, insulationOptions, panelTypeOptions, type InsulationType, type PanelType } from '@/data/panel-catalog';
+import { drawDepthScene } from './webgl-model-renderer';
+import type { Camera, Face, Point3 } from './model-types';
 
-type Point3 = [number, number, number];
-type Face = { points: Point3[]; fill: string; stroke?: string };
 type Palette = [string, string, string, string, string, string];
 type ModelKind = 'panel' | 'warehouse';
 type ModelContext = 'hero' | 'panel';
-
-type Camera = {
-  yaw: number;
-  pitch: number;
-  zoom: number;
-};
 
 const steelPalette: Palette = [
   '#AEBCC6',
@@ -100,6 +95,25 @@ function addBox(faces: Face[], center: Point3, size: Point3, colors: Palette) {
   polygons.forEach((points, index) => faces.push({ points, fill: colors[index] }));
 }
 
+function shadeHex(hex: string, amount: number) {
+  const channels = [1, 3, 5].map((start) => Number.parseInt(hex.slice(start, start + 2), 16));
+  const target = amount > 0 ? 255 : 0;
+  const strength = Math.abs(amount);
+  const shaded = channels.map((channel) => Math.round(channel + (target - channel) * strength));
+  return `#${shaded.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
+}
+
+function createSteelPalette(color: string): Palette {
+  return [
+    shadeHex(color, 0.2),
+    shadeHex(color, -0.38),
+    shadeHex(color, -0.14),
+    shadeHex(color, -0.47),
+    shadeHex(color, -0.28),
+    shadeHex(color, 0.32),
+  ];
+}
+
 function addBeam(
   faces: Face[],
   start: Point3,
@@ -135,45 +149,108 @@ function addBeam(
   polygons.forEach((polygon, index) => faces.push({ points: polygon, fill: colors[index] }));
 }
 
-function buildPanelScene(): Face[] {
+function addLongitudinalRib(
+  faces: Face[],
+  xStart: number,
+  xEnd: number,
+  centerZ: number,
+  bottomY: number,
+  height: number,
+  bottomWidth: number,
+  topWidth: number,
+  colors: Palette,
+) {
+  const z0 = centerZ - bottomWidth / 2;
+  const z1 = centerZ - topWidth / 2;
+  const z2 = centerZ + topWidth / 2;
+  const z3 = centerZ + bottomWidth / 2;
+  const a: Point3 = [xStart, bottomY, z0];
+  const b: Point3 = [xStart, bottomY + height, z1];
+  const c: Point3 = [xStart, bottomY + height, z2];
+  const d: Point3 = [xStart, bottomY, z3];
+  const e: Point3 = [xEnd, bottomY, z0];
+  const f: Point3 = [xEnd, bottomY + height, z1];
+  const g: Point3 = [xEnd, bottomY + height, z2];
+  const h: Point3 = [xEnd, bottomY, z3];
+
+  const facesToAdd: Point3[][] = [
+    [a, b, c, d],
+    [e, h, g, f],
+    [a, e, f, b],
+    [b, f, g, c],
+    [c, g, h, d],
+    [d, h, e, a],
+  ];
+  facesToAdd.forEach((points, index) => faces.push({ points, fill: colors[index] }));
+}
+
+const insulationPalettes: Record<InsulationType, Palette> = {
+  'mineral-wool': woolPalette,
+  polystyrene: ['#F3F1EA', '#B9B7AF', '#E6E4DC', '#C9C7BE', '#DAD8D0', '#FCFBF7'],
+  'pur-pir': ['#F0E9D5', '#B6AD95', '#E5DCC4', '#C8BEA7', '#D7CEBA', '#FBF7EB'],
+  xps: ['#E7EBD8', '#9EA78A', '#D8E0C5', '#B5BEA0', '#C9D1B6', '#F6F8EC'],
+};
+
+function buildPanelScene(panelType: PanelType, insulation: InsulationType, steelColor: string): Face[] {
   const faces: Face[] = [];
+  const steel = createSteelPalette(steelColor);
+  const brightSteel = steel.map((color) => shadeHex(color, 0.22)) as Palette;
+  const filler = insulationPalettes[insulation];
 
-  addBox(faces, [0, 0, 0], [6.4, 0.34, 2.7], woolPalette);
-  addBox(
-    faces,
-    [0, -0.215, 0],
-    [6.45, 0.08, 2.76],
-    ['#778995', '#33424D', '#657681', '#4C5D68', '#52636E', '#A7B5BE'],
-  );
-  addBox(faces, [1.58, 0.215, 0], [3.25, 0.075, 2.76], steelPalette);
+  addBox(faces, [0, 0, 0], [6.4, 0.34, 2.7], filler);
+  addBox(faces, [0, -0.215, 0], [6.45, 0.08, 2.76], steel);
+  addBox(faces, [1.58, 0.215, 0], [3.25, 0.075, 2.76], steel);
 
-  for (let index = 0; index < 9; index += 1) {
-    const z = -1.2 + index * 0.3;
-    addBox(faces, [1.58, 0.285, z], [3.22, 0.075, 0.105], brightSteelPalette);
+  if (insulation === 'mineral-wool') {
+    for (let index = 0; index < 11; index += 1) {
+      const z = -1.12 + index * 0.22;
+      addBeam(
+        faces,
+        [-2.85, 0.174, z],
+        [-0.28, 0.174, z + 0.22],
+        0.012,
+        0.01,
+        fiberPalette,
+      );
+    }
+  } else if (insulation === 'polystyrene') {
+    const beadPalette: Palette = ['#FAF9F4', '#D5D3CB', '#EFEEE8', '#DAD8D0', '#E8E6DE', '#FFFFFF'];
+    for (let xIndex = 0; xIndex < 9; xIndex += 1) {
+      for (let zIndex = 0; zIndex < 6; zIndex += 1) {
+        addBox(
+          faces,
+          [-3.02 + xIndex * 0.31, 0.178, -1.12 + zIndex * 0.43],
+          [0.075, 0.014, 0.075],
+          beadPalette,
+        );
+      }
+    }
+  } else if (insulation === 'xps') {
+    const groovePalette: Palette = ['#EFF2E4', '#C2C9AF', '#E1E6D4', '#C6CCB7', '#D7DDC7', '#F7F9EF'];
+    for (let index = 0; index < 8; index += 1) {
+      const z = -1.12 + index * 0.31;
+      addBeam(faces, [-3.05, 0.174, z], [-0.12, 0.174, z + 0.08], 0.012, 0.01, groovePalette);
+    }
   }
 
-  for (let index = 0; index < 18; index += 1) {
-    const z = -1.18 + ((index * 7) % 17) * 0.14;
-    const y = -0.125 + (index % 5) * 0.052;
-    addBeam(
-      faces,
-      [-3.205, y, z],
-      [-3.205, y + 0.038, z + 0.095],
-      0.018,
-      0.012,
-      fiberPalette,
-    );
-  }
+  const ribCount = panelType === 'roof' ? 5 : 9;
+  const ribSpacing = panelType === 'roof' ? 0.52 : 0.31;
+  const ribBottomWidth = panelType === 'roof' ? 0.23 : 0.16;
+  const ribTopWidth = panelType === 'roof' ? 0.105 : 0.065;
+  const ribHeight = panelType === 'roof' ? 0.13 : 0.065;
+  const ribStart = -((ribCount - 1) * ribSpacing) / 2;
 
-  for (let index = 0; index < 11; index += 1) {
-    const z = -1.12 + index * 0.22;
-    addBeam(
+  for (let index = 0; index < ribCount; index += 1) {
+    addLongitudinalRib(
       faces,
-      [-2.85, 0.174, z],
-      [-0.28, 0.174, z + 0.22],
-      0.012,
-      0.01,
-      fiberPalette,
+      -0.02,
+      3.18,
+      ribStart + index * ribSpacing,
+      0.252,
+      ribHeight,
+      ribBottomWidth,
+      ribTopWidth,
+      brightSteel,
     );
   }
 
@@ -368,7 +445,7 @@ const modelSettings: Record<
     title: 'Сэндвич-панель в разрезе',
     instruction: 'Стальная облицовка · минеральная вата · стальная облицовка',
     initialCamera: { yaw: -0.52, pitch: 0.56, zoom: 1 },
-    build: buildPanelScene,
+    build: () => buildPanelScene('wall', 'mineral-wool', defaultRalColor.hex),
   },
   warehouse: {
     title: 'Открытый каркас склада на фундаменте',
@@ -383,11 +460,26 @@ const clampZoom = (zoom: number) => Math.max(0.68, Math.min(1.8, zoom));
 export function Interactive3DModel({
   kind,
   context,
+  panelType = 'wall',
+  insulation = 'mineral-wool',
+  steelColor = defaultRalColor.hex,
+  ralCode = defaultRalColor.code,
 }: {
   kind: ModelKind;
   context: ModelContext;
+  panelType?: PanelType;
+  insulation?: InsulationType;
+  steelColor?: string;
+  ralCode?: string;
 }) {
   const settings = modelSettings[kind];
+  const panelTypeTitle = panelTypeOptions.find((option) => option.id === panelType)!.label;
+  const insulationTitle = insulationOptions.find((option) => option.id === insulation)!.label;
+  const title = kind === 'panel' ? panelTypeTitle : settings.title;
+  const instruction =
+    kind === 'panel'
+      ? `${insulationTitle} · наружный металл ${ralCode}`
+      : settings.instruction;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dragRef = useRef<{ pointerId: number; x: number; y: number } | null>(null);
   const [camera, setCamera] = useState<Camera>(settings.initialCamera);
@@ -411,8 +503,12 @@ export function Interactive3DModel({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || stageSize.width === 0 || stageSize.height === 0) return;
-    drawScene(canvas, stageSize.width, stageSize.height, settings.build(), camera);
-  }, [camera, settings, stageSize]);
+    const faces =
+      kind === 'panel'
+        ? buildPanelScene(panelType, insulation, steelColor)
+        : settings.build();
+    drawDepthScene(canvas, stageSize.width, stageSize.height, faces, camera);
+  }, [camera, insulation, kind, panelType, settings, stageSize, steelColor]);
 
   const resetCamera = () => setCamera(settings.initialCamera);
   const zoomBy = (factor: number) =>
@@ -475,14 +571,14 @@ export function Interactive3DModel({
     <div
       className={`interactive-3d-model interactive-3d-model--${context}${isDragging ? ' is-dragging' : ''}`}
       role="group"
-      aria-label={`${settings.title}. ${settings.instruction}`}
+      aria-label={`${title}. ${instruction}`}
     >
       <canvas
         ref={canvasRef}
         className="interactive-3d-model__canvas"
         role="application"
         tabIndex={0}
-        aria-label={`${settings.title}. ${settings.instruction}. Перетаскивайте для вращения; колесо мыши, плюс и минус меняют масштаб; стрелки клавиатуры поворачивают модель; 0 сбрасывает ракурс.`}
+        aria-label={`${title}. ${instruction}. Перетаскивайте для вращения; колесо мыши, плюс и минус меняют масштаб; стрелки клавиатуры поворачивают модель; 0 сбрасывает ракурс.`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={releasePointer}
