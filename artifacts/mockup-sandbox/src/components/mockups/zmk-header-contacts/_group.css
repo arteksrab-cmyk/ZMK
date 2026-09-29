@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --app-font-sans: 'Manrope', sans-serif;
+  --app-font-mono: 'Space Mono', monospace;
+  --ink: #111c26;
+  --orange: #ee590d;
+  --cream: #fffaf1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 0;
+  margin: 0;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--app-font-sans);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+.contact-preview-shell {
+  min-height: 210px;
+  padding: 28px 32px;
+  background:
+    radial-gradient(ellipse at 75% 0%, rgba(58, 75, 86, 0.4), transparent 52%),
+    var(--ink);
+}
+
+.header-contact {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.header-phone {
+  position: relative;
+  display: block;
+  padding: 4px 6px;
+  border-radius: 3px;
+  color: var(--cream);
+  text-align: right;
+  transition: color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.header-phone:hover {
+  color: var(--cream);
+}
+
+.header-phone:focus-visible,
+.header-email:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.header-phone:active {
+  background: rgba(242, 91, 43, 0.16);
+  transform: scale(0.97);
+}
+
+.header-phone-main {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.header-phone-icon {
+  flex: 0 0 auto;
+  color: var(--orange);
+}
+
+.header-phone-number {
+  display: block;
+  font-size: clamp(15px, 1.55vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.header-phone-hours {
+  display: block;
+  margin-top: 2px;
+  color: var(--orange);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+.header-email {
+  padding: 2px 6px 0;
+  color: rgba(255, 250, 241, 0.9);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  transition: color 160ms ease;
+}
+
+.header-email:hover,
+.header-email:focus-visible {
+  color: var(--orange);
+}
+
+.header-email-actions {
+  position: relative;
+}
+
+.header-email-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 250, 241, 0.9);
+  cursor: pointer;
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  padding: 3px 6px 0;
+  transition: color 160ms ease;
+}
+
+.header-email-trigger:hover,
+.header-email-trigger:focus-visible,
+.header-email-trigger[aria-expanded='true'] {
+  color: var(--orange);
+}
+
+.header-email-trigger:focus-visible,
+.header-email-menu button:focus-visible,
+.header-email-menu a:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+}
+
+.header-email-chevron {
+  transition: transform 160ms ease;
+}
+
+.header-email-trigger[aria-expanded='true'] .header-email-chevron {
+  transform: rotate(180deg);
+}
+
+.header-email-menu {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 9px);
+  right: 0;
+  display: grid;
+  min-width: 190px;
+  gap: 2px;
+  padding: 5px;
+  border: 1px solid rgba(255, 250, 241, 0.18);
+  border-radius: 3px;
+  background: #172630;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
+}
+
+.header-email-menu[hidden] {
+  display: none;
+}
+
+.header-email-menu button,
+.header-email-menu a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 10px 11px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: rgba(255, 250, 241, 0.9);
+  cursor: pointer;
+  font-family: var(--app-font-sans);
+  font-size: 12px;
+  text-align: left;
+}
+
+.header-email-menu button:hover,
+.header-email-menu a:hover {
+  background: rgba(255, 250, 241, 0.08);
+  color: var(--cream);
+}
+
+.header-email-menu svg {
+  flex: 0 0 auto;
+  color: var(--orange);
+}
+
+.header-email-status {
+  position: absolute;
+  top: calc(100% + 7px);
+  right: 0;
+  z-index: 6;
+  padding: 7px 10px;
+  border: 1px solid rgba(238, 89, 13, 0.5);
+  border-radius: 2px;
+  background: #172630;
+  color: var(--cream);
+  font-family: var(--app-font-mono);
+  font-size: 9px;
+  white-space: nowrap;
+}

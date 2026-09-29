@@ -29,6 +29,7 @@ import {
 } from '@/data/panel-catalog';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Interactive3DModel } from '@/components/interactive-3d-model';
+import { WindowShowcase } from '@/components/window-showcase';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
@@ -491,16 +492,9 @@ function Glazing() {
             </div>
           </div>
           <div className="glazing-intro reveal">
-            <figure className="glazing-visual" data-testid="image-glazing-window">
-              <img
-                className="glazing-window-photo"
-                src={`${assetBase}images/window-glazing.jpg`}
-                alt="Панорамные окна в интерьере квартиры с видом на зимний город"
-                loading="lazy"
-                decoding="async"
-              />
-              <img className="glazing-window-watermark" src={sokolLogo} alt="" aria-hidden="true" />
-            </figure>
+            <div className="glazing-visual" data-testid="image-glazing-window">
+              <WindowShowcase />
+            </div>
             <p className="glazing-intro-copy" data-testid="text-glazing-disclaimer">
               ЗМК СМС-РЕСУРС не изготавливает окна и стеклянные изделия
               самостоятельно. Под задачу проекта можем рекомендовать наших
