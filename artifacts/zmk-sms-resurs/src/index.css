@@ -990,7 +990,7 @@ a {
   min-height: 470px;
   margin: 0;
   overflow: hidden;
-  background: #172630;
+  background: var(--cream);
   border: 1px solid rgba(16, 25, 32, 0.12);
 }
 
@@ -998,7 +998,7 @@ a {
   position: absolute;
   z-index: 1;
   inset: 0;
-  background: linear-gradient(180deg, rgba(12, 20, 26, 0.02) 55%, rgba(12, 20, 26, 0.3) 100%);
+  background: linear-gradient(180deg, rgba(255, 250, 241, 0) 55%, rgba(235, 228, 216, 0.2) 100%);
   content: '';
   pointer-events: none;
 }
@@ -1009,11 +1009,11 @@ a {
   display: grid;
   min-height: 468px;
   grid-template-rows: auto minmax(260px, 1fr) auto auto;
-  color: var(--cream);
+  color: var(--ink);
   background:
-    linear-gradient(rgba(190, 204, 211, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(190, 204, 211, 0.07) 1px, transparent 1px),
-    linear-gradient(145deg, rgba(255, 250, 241, 0.08), rgba(15, 27, 35, 0.15) 58%);
+    linear-gradient(rgba(17, 28, 38, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(17, 28, 38, 0.055) 1px, transparent 1px),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.56), rgba(235, 228, 216, 0.42) 58%);
   background-size: 36px 36px, 36px 36px, 100% 100%;
 }
 
@@ -1027,13 +1027,13 @@ a {
 }
 
 .window-showcase__header {
-  border-bottom: 1px solid rgba(255, 250, 241, 0.14);
+  border-bottom: 1px solid rgba(17, 28, 38, 0.13);
 }
 
 .window-showcase__instruction,
 .window-showcase__description {
   margin: 7px 0 0;
-  color: rgba(255, 250, 241, 0.52);
+  color: rgba(17, 28, 38, 0.62);
   font-family: var(--app-font-mono);
   font-size: 9px;
   line-height: 1.45;
@@ -1060,7 +1060,7 @@ a {
   left: 13%;
   height: 8%;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.34);
+  background: rgba(17, 28, 38, 0.16);
   content: '';
   filter: blur(10px);
 }
@@ -1094,7 +1094,7 @@ a {
   width: clamp(92px, 25%, 145px);
   opacity: .16;
   pointer-events: none;
-  filter: saturate(.8) drop-shadow(0 1px 6px rgba(0, 0, 0, .4));
+  filter: saturate(.8) drop-shadow(0 1px 6px rgba(17, 28, 38, .2));
   transform: translate(-50%, -50%);
 }
 
@@ -1112,9 +1112,9 @@ a {
   align-items: center;
   gap: 7px;
   padding: 7px 9px;
-  border: 1px solid rgba(255, 250, 241, .18);
-  background: rgba(17, 28, 38, .8);
-  color: rgba(255, 250, 241, .68);
+  border: 1px solid rgba(17, 28, 38, .16);
+  background: rgba(255, 250, 241, .92);
+  color: rgba(17, 28, 38, .78);
   font-family: var(--app-font-mono);
   font-size: 8px;
   letter-spacing: .06em;
@@ -1154,8 +1154,8 @@ a {
   display: flex;
   gap: 3px;
   padding: 3px;
-  border: 1px solid rgba(255, 250, 241, .18);
-  background: rgba(17, 28, 38, .86);
+  border: 1px solid rgba(17, 28, 38, .16);
+  background: rgba(255, 250, 241, .94);
 }
 
 .window-showcase__controls button {
@@ -1166,13 +1166,13 @@ a {
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--cream);
+  color: var(--ink);
   cursor: pointer;
 }
 
 .window-showcase__controls button:hover,
 .window-showcase__controls button:focus-visible {
-  background: rgba(238, 89, 13, .16);
+  background: rgba(238, 89, 13, .1);
   color: var(--orange);
 }
 
@@ -1187,7 +1187,7 @@ a {
   align-items: stretch;
   padding-top: 10px;
   padding-bottom: 9px;
-  border-top: 1px solid rgba(255, 250, 241, 0.14);
+  border-top: 1px solid rgba(17, 28, 38, 0.13);
 }
 
 .window-showcase__tabs {
@@ -1204,7 +1204,7 @@ a {
   padding: 7px 8px 8px;
   border: 1px solid transparent;
   background: transparent;
-  color: rgba(255, 250, 241, .52);
+  color: rgba(17, 28, 38, .62);
   cursor: pointer;
   text-align: left;
 }
@@ -1227,7 +1227,7 @@ a {
 .window-showcase__tab.is-active {
   border-color: rgba(238, 89, 13, .54);
   background: rgba(238, 89, 13, .08);
-  color: var(--cream);
+  color: var(--ink);
 }
 
 .window-showcase__action {
@@ -1244,7 +1244,7 @@ a {
   padding: 8px 9px;
   border: 1px solid rgba(238, 89, 13, .56);
   background: rgba(238, 89, 13, .08);
-  color: var(--cream);
+  color: var(--ink);
   cursor: pointer;
   font-family: var(--app-font-mono);
   font-size: 9px;
@@ -1271,7 +1271,7 @@ a {
 
 .window-showcase__hint {
   max-width: 125px;
-  color: rgba(255, 250, 241, .46);
+  color: rgba(17, 28, 38, .56);
   font-family: var(--app-font-mono);
   font-size: 8px;
   line-height: 1.4;
