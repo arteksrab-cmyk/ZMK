@@ -371,7 +371,10 @@ function Hero() {
       <div className="hero-content">
         <div className="hero-copy reveal">
           <span className="eyebrow">ЗМК · Новосибирск · Работа по проекту</span>
-          <h1 className="display">Собираем<br /><em>опору</em><br />для бизнеса.</h1>
+          <h1 className="display">
+            <span className="hero-title-first">Собираем <em>опору</em></span>
+            <span className="hero-title-last">для бизнеса.</span>
+          </h1>
           <p className="hero-lede">
             Производим и поставляем металлоконструкции для промышленных,
             коммерческих и инфраструктурных объектов — от первого чертежа до
