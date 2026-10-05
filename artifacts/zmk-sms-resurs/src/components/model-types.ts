@@ -4,6 +4,7 @@ export type Face = {
   points: Point3[];
   fill: string;
   stroke?: string;
+  texture?: 'sprayed';
 };
 
 export type Camera = {

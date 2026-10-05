@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type WheelEvent } from 'react';
 import { Box, Minus, Plus, RotateCcw } from 'lucide-react';
+import fireproofingPhoto from '@assets/i_(1)_1791117335242.jpeg';
 import { defaultRalColor, insulationOptions, panelTypeOptions, type InsulationType, type PanelType } from '@/data/panel-catalog';
 import { drawDepthScene } from './webgl-model-renderer';
 import type { Camera, Face, Point3 } from './model-types';
 
 type Palette = [string, string, string, string, string, string];
-type ModelKind = 'panel' | 'warehouse';
-type ModelContext = 'hero' | 'panel';
+type ModelKind = 'panel' | 'warehouse' | 'fireproofing';
+type ModelContext = 'hero' | 'panel' | 'fire';
 
 const steelPalette: Palette = [
   '#AEBCC6',
@@ -52,6 +53,24 @@ const fiberPalette: Palette = [
   '#F4E7BF',
   '#D5BB78',
 ];
+
+const fireproofingPalette: Palette = [
+  '#F1F0EA',
+  '#D2D1C9',
+  '#E9E8E1',
+  '#DAD9D1',
+  '#E0DFD7',
+  '#FAF9F4',
+];
+
+const coatingGrainPalette = [
+  '#F7F6F1',
+  '#EEECE5',
+  '#E4E2DA',
+  '#D7D5CC',
+  '#EDEBE4',
+  '#DFDDD5',
+] as const;
 
 const add = (a: Point3, b: Point3): Point3 => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
 const subtract = (a: Point3, b: Point3): Point3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
@@ -349,6 +368,151 @@ function buildWarehouseScene(): Face[] {
   return faces;
 }
 
+function addCoatedBeam(
+  faces: Face[],
+  start: Point3,
+  end: Point3,
+  width: number,
+  depth: number,
+  seed: number,
+) {
+  const delta = subtract(end, start);
+  const length = Math.hypot(delta[0], delta[1], delta[2]);
+  const axis = normalize(delta);
+  const reference: Point3 = Math.abs(axis[1]) > 0.93 ? [0, 0, 1] : [0, 1, 0];
+  const across = normalize(cross(axis, reference));
+  const thickness = normalize(cross(axis, across));
+  const outerWidth = width + 0.15;
+  const outerDepth = depth + 0.15;
+  const halfWidth = outerWidth / 2;
+  const halfDepth = outerDepth / 2;
+  const corner = Math.min(halfWidth, halfDepth) * 0.42;
+  const random = (index: number) => {
+    const value = Math.sin((seed + index * 17.31) * 127.1) * 43758.5453;
+    return value - Math.floor(value);
+  };
+  const profile: Array<[number, number]> = [];
+  const roundedCorners: Array<[number, number, number]> = [
+    [halfWidth - corner, -halfDepth + corner, -Math.PI / 2],
+    [halfWidth - corner, halfDepth - corner, 0],
+    [-halfWidth + corner, halfDepth - corner, Math.PI / 2],
+    [-halfWidth + corner, -halfDepth + corner, Math.PI],
+  ];
+  roundedCorners.forEach(([centerU, centerV, startAngle]) => {
+    for (let step = 0; step < 3; step += 1) {
+      const angle = startAngle + (step / 2) * (Math.PI / 2);
+      profile.push([
+        centerU + Math.cos(angle) * corner,
+        centerV + Math.sin(angle) * corner,
+      ]);
+    }
+  });
+  const segments = Math.max(12, Math.ceil(length * 5));
+  const sections = Array.from({ length: segments + 1 }, (_, segment) => {
+    const t = segment / segments;
+    const center = add(start, multiply(delta, t));
+    const endSoftening = segment === 0 || segment === segments ? 0.97 : 1;
+    return profile.map(([u, v], pointIndex) => {
+      const unevenness = (random(segment * 31 + pointIndex * 7) - 0.5) * 0.05;
+      const scale = endSoftening + unevenness;
+      return add(add(center, multiply(across, u * scale)), multiply(thickness, v * scale));
+    });
+  });
+
+  const faceColors = profile.map((_, pointIndex) => {
+    const paletteIndex = Math.floor((pointIndex / profile.length) * fireproofingPalette.length);
+    return fireproofingPalette[paletteIndex];
+  });
+  sections.slice(0, -1).forEach((section, sectionIndex) => {
+    const nextSection = sections[sectionIndex + 1];
+    section.forEach((point, pointIndex) => {
+      const nextPoint = (pointIndex + 1) % section.length;
+      faces.push({
+        points: [
+          point,
+          section[nextPoint],
+          nextSection[nextPoint],
+          nextSection[pointIndex],
+        ],
+        fill: faceColors[pointIndex],
+        texture: 'sprayed',
+      });
+    });
+  });
+  faces.push({ points: sections[0].slice().reverse(), fill: fireproofingPalette[1], texture: 'sprayed' });
+  faces.push({ points: sections[segments], fill: fireproofingPalette[5], texture: 'sprayed' });
+
+  const grainsPerSide = Math.max(24, Math.ceil(length * 12));
+  for (let sideIndex = 0; sideIndex < 4; sideIndex += 1) {
+    const side = sideIndex % 2 === 0 ? -1 : 1;
+    const acrossAxis = sideIndex < 2 ? thickness : across;
+    const outward = sideIndex < 2 ? multiply(across, side) : multiply(thickness, side);
+    const surfaceCenter =
+      sideIndex < 2
+        ? multiply(across, side * halfWidth)
+        : multiply(thickness, side * halfDepth);
+    const acrossLimit =
+      sideIndex < 2
+        ? halfDepth - corner * 1.25
+        : halfWidth - corner * 1.25;
+
+    for (let grainIndex = 0; grainIndex < grainsPerSide; grainIndex += 1) {
+      const randomBase = 1000 + sideIndex * 10000 + grainIndex * 13;
+      const t = 0.025 + random(randomBase) * 0.95;
+      const center = add(
+        add(start, multiply(delta, t)),
+        add(surfaceCenter, multiply(acrossAxis, (random(randomBase + 1) * 2 - 1) * acrossLimit)),
+      );
+      const lengthRadius = 0.04 + random(randomBase + 2) * 0.04;
+      const acrossRadius = 0.035 + random(randomBase + 3) * 0.035;
+      const peak = add(
+        add(center, multiply(outward, 0.025 + random(randomBase + 4) * 0.024)),
+        add(
+          multiply(axis, (random(randomBase + 5) - 0.5) * lengthRadius * 0.3),
+          multiply(acrossAxis, (random(randomBase + 6) - 0.5) * acrossRadius * 0.3),
+        ),
+      );
+      const grainSides = 6;
+      const ring = Array.from({ length: grainSides }, (_, pointIndex) => {
+        const angle = (pointIndex / grainSides) * Math.PI * 2;
+        const unevenness = 0.72 + random(randomBase + 20 + pointIndex) * 0.52;
+        const basePoint = add(
+          add(
+            center,
+            multiply(axis, Math.cos(angle) * lengthRadius * unevenness),
+          ),
+          add(
+            multiply(acrossAxis, Math.sin(angle) * acrossRadius * unevenness),
+            multiply(outward, 0.002),
+          ),
+        );
+        return basePoint;
+      });
+      const fill = coatingGrainPalette[
+        Math.floor(random(randomBase + 12) * coatingGrainPalette.length)
+      ];
+      ring.forEach((point, pointIndex) => {
+        faces.push({
+          points: [point, ring[(pointIndex + 1) % ring.length], peak],
+          fill,
+          texture: 'sprayed',
+        });
+      });
+    }
+  }
+}
+
+function buildFireproofingScene(): Face[] {
+  const faces: Face[] = [];
+
+  addCoatedBeam(faces, [0, -2.55, 0], [0, 2.85, 0], 0.86, 0.8, 7);
+  addCoatedBeam(faces, [-3.1, 1.22, 0], [3.1, 1.22, 0], 0.82, 0.78, 19);
+  addCoatedBeam(faces, [0, 1.22, -2.75], [0, 1.22, 2.75], 0.8, 0.78, 31);
+  addCoatedBeam(faces, [0, 0.68, 0], [0, 1.76, 0], 0.95, 0.92, 43);
+
+  return faces;
+}
+
 function rotatePoint(point: Point3, yaw: number, pitch: number) {
   const cosYaw = Math.cos(yaw);
   const sinYaw = Math.sin(yaw);
@@ -452,6 +616,12 @@ const modelSettings: Record<
     instruction: 'Каркас и связи · фундамент · без панелей',
     initialCamera: { yaw: 0.68, pitch: 0.38, zoom: 1 },
     build: buildWarehouseScene,
+  },
+  fireproofing: {
+    title: 'Стальной узел с огнезащитным покрытием',
+    instruction: 'Напыляемое огнезащитное покрытие · вращайте и увеличивайте модель',
+    initialCamera: { yaw: 0.62, pitch: 0.24, zoom: 1 },
+    build: buildFireproofingScene,
   },
 };
 
@@ -573,6 +743,19 @@ export function Interactive3DModel({
       role="group"
       aria-label={`${title}. ${instruction}`}
     >
+      {context === 'fire' && (
+        <div className="interactive-3d-model__fire" aria-hidden="true">
+          <img className="interactive-3d-model__fire-photo" src={fireproofingPhoto} alt="" />
+          <span className="interactive-3d-model__fire-glow" />
+          <span className="interactive-3d-model__flame-bed">
+            {Array.from({ length: 6 }, (_, index) => <i key={index} />)}
+          </span>
+          <span className="interactive-3d-model__embers">
+            {Array.from({ length: 8 }, (_, index) => <i key={index} />)}
+          </span>
+        </div>
+      )}
+
       <canvas
         ref={canvasRef}
         className="interactive-3d-model__canvas"
@@ -594,9 +777,9 @@ export function Interactive3DModel({
         <span>ПОТЯНИТЕ ДЛЯ ВРАЩЕНИЯ</span>
       </div>
 
-      {context === 'panel' && (
+      {(context === 'panel' || context === 'fire') && (
         <div className="interactive-3d-model__note" aria-hidden="true">
-          {settings.instruction}
+          {context === 'fire' ? 'НАПЫЛЯЕМОЕ ОГНЕЗАЩИТНОЕ ПОКРЫТИЕ' : settings.instruction}
         </div>
       )}
 

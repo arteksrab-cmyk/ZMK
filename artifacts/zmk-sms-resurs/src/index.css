@@ -325,7 +325,7 @@ a {
   padding: 5px;
   border: 1px solid rgba(255, 250, 241, 0.18);
   border-radius: 3px;
-  background: #172630;
+  background: var(--cream);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.34);
 }
 
@@ -664,6 +664,178 @@ a {
     linear-gradient(90deg, rgba(190, 204, 211, 0.09) 1px, transparent 1px),
     linear-gradient(145deg, rgba(255, 250, 241, 0.085), rgba(255, 250, 241, 0.012) 64%);
   background-size: 38px 38px, 38px 38px, 100% 100%;
+}
+
+.interactive-3d-model--fire {
+  position: absolute;
+  inset: 0;
+  background-image: none;
+}
+
+.interactive-3d-model--fire::before {
+  display: none;
+}
+
+.interactive-3d-model__fire {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(255, 167, 46, 0.36), transparent 63%),
+    linear-gradient(180deg, rgba(17, 28, 38, 0.02) 42%, rgba(93, 20, 2, 0.2) 100%);
+  pointer-events: none;
+}
+
+.interactive-3d-model__fire-photo {
+  position: absolute;
+  bottom: -13%;
+  left: -4%;
+  width: 108%;
+  height: 80%;
+  object-fit: cover;
+  object-position: center 72%;
+  opacity: 0.36;
+  filter: saturate(1.2) blur(1.5px);
+  mix-blend-mode: screen;
+  mask-image: linear-gradient(to top, #000 3%, rgba(0, 0, 0, 0.78) 54%, transparent 100%);
+  animation: fire-photo-flicker 2.7s ease-in-out infinite alternate;
+}
+
+.interactive-3d-model__fire-glow {
+  position: absolute;
+  right: -18%;
+  bottom: -31%;
+  left: -18%;
+  height: 75%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 244, 167, 0.62) 0%, rgba(255, 119, 22, 0.58) 27%, rgba(198, 32, 4, 0.34) 57%, transparent 74%);
+  filter: blur(15px);
+  animation: fire-glow-pulse 1.8s ease-in-out infinite alternate;
+}
+
+.interactive-3d-model__flame-bed {
+  position: absolute;
+  right: -2%;
+  bottom: -31%;
+  left: -2%;
+  height: 78%;
+  filter: drop-shadow(0 -4px 12px rgba(255, 99, 12, 0.46));
+  mix-blend-mode: screen;
+}
+
+.interactive-3d-model__flame-bed i {
+  position: absolute;
+  bottom: 0;
+  display: block;
+  border-radius: 48% 52% 10% 10%;
+  background: radial-gradient(ellipse at 50% 100%, #fff4b0 0%, #ffd04d 13%, #ff851b 34%, #eb3d0d 60%, rgba(167, 23, 0, 0) 84%);
+  clip-path: polygon(50% 0, 65% 18%, 59% 39%, 80% 25%, 95% 56%, 100% 78%, 83% 100%, 16% 100%, 0 76%, 20% 51%, 23% 31%, 39% 44%);
+  transform-origin: 50% 100%;
+  animation: flame-dance 1.24s ease-in-out infinite alternate;
+}
+
+.interactive-3d-model__flame-bed i:nth-child(1) {
+  left: -3%;
+  width: 29%;
+  height: 67%;
+  animation-duration: 1.08s;
+}
+
+.interactive-3d-model__flame-bed i:nth-child(2) {
+  left: 11%;
+  width: 26%;
+  height: 88%;
+  animation-delay: -0.72s;
+  animation-duration: 1.42s;
+}
+
+.interactive-3d-model__flame-bed i:nth-child(3) {
+  left: 29%;
+  width: 28%;
+  height: 62%;
+  animation-delay: -0.36s;
+  animation-duration: 1.18s;
+}
+
+.interactive-3d-model__flame-bed i:nth-child(4) {
+  left: 46%;
+  width: 30%;
+  height: 92%;
+  animation-delay: -0.94s;
+  animation-duration: 1.54s;
+}
+
+.interactive-3d-model__flame-bed i:nth-child(5) {
+  left: 67%;
+  width: 27%;
+  height: 71%;
+  animation-delay: -0.48s;
+  animation-duration: 1.12s;
+}
+
+.interactive-3d-model__flame-bed i:nth-child(6) {
+  left: 83%;
+  width: 25%;
+  height: 84%;
+  animation-delay: -1.08s;
+  animation-duration: 1.38s;
+}
+
+.interactive-3d-model__embers {
+  position: absolute;
+  inset: 22% 7% 0;
+}
+
+.interactive-3d-model__embers i {
+  position: absolute;
+  bottom: 3%;
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffe28c;
+  box-shadow: 0 0 8px 2px rgba(255, 139, 32, 0.78);
+  animation: ember-rise 2.6s linear infinite;
+}
+
+.interactive-3d-model__embers i:nth-child(1) { left: 8%; animation-delay: -0.5s; }
+.interactive-3d-model__embers i:nth-child(2) { left: 19%; animation-delay: -1.8s; animation-duration: 2.2s; }
+.interactive-3d-model__embers i:nth-child(3) { left: 32%; animation-delay: -1s; animation-duration: 2.9s; }
+.interactive-3d-model__embers i:nth-child(4) { left: 44%; animation-delay: -2.2s; animation-duration: 2.4s; }
+.interactive-3d-model__embers i:nth-child(5) { left: 57%; animation-delay: -0.8s; animation-duration: 3s; }
+.interactive-3d-model__embers i:nth-child(6) { left: 71%; animation-delay: -1.6s; animation-duration: 2.5s; }
+.interactive-3d-model__embers i:nth-child(7) { left: 83%; animation-delay: -0.3s; animation-duration: 2.8s; }
+.interactive-3d-model__embers i:nth-child(8) { left: 94%; animation-delay: -1.3s; animation-duration: 2.1s; }
+
+@keyframes fire-photo-flicker {
+  from { opacity: 0.27; filter: saturate(1.1) blur(1.7px) brightness(0.9); }
+  to { opacity: 0.42; filter: saturate(1.35) blur(1.2px) brightness(1.12); }
+}
+
+@keyframes fire-glow-pulse {
+  from { opacity: 0.62; transform: scaleX(0.94) scaleY(0.92); }
+  to { opacity: 0.96; transform: scaleX(1.04) scaleY(1.05); }
+}
+
+@keyframes flame-dance {
+  from { opacity: 0.66; transform: scaleX(0.88) scaleY(0.84) rotate(-4deg); }
+  to { opacity: 0.96; transform: scaleX(1.06) scaleY(1.12) rotate(5deg); }
+}
+
+@keyframes ember-rise {
+  0% { opacity: 0; transform: translate3d(0, 5px, 0) scale(0.6); }
+  14% { opacity: 0.92; }
+  100% { opacity: 0; transform: translate3d(11px, -112px, 0) scale(0.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-3d-model__fire-photo,
+  .interactive-3d-model__fire-glow,
+  .interactive-3d-model__flame-bed i,
+  .interactive-3d-model__embers i {
+    animation: none;
+  }
 }
 
 .interactive-3d-model__canvas {
@@ -1721,51 +1893,11 @@ a {
 .fire-diagram {
   position: relative;
   min-height: 360px;
+  overflow: hidden;
   border: 1px solid rgba(255, 250, 241, 0.55);
   background: rgba(17, 28, 38, 0.12);
 }
 
-.fire-diagram::before,
-.fire-diagram::after {
-  position: absolute;
-  content: '';
-}
-
-.fire-diagram::before {
-  top: 16%;
-  right: 14%;
-  width: 57%;
-  height: 57%;
-  border: 1px solid var(--cream);
-  transform: rotate(45deg);
-}
-
-.fire-diagram::after {
-  right: 26%;
-  bottom: 20%;
-  width: 35%;
-  height: 1px;
-  background: var(--cream);
-  box-shadow: 0 -13px 0 rgba(255, 250, 241, 0.6), 0 -26px 0 rgba(255, 250, 241, 0.3);
-}
-
-.diagram-note {
-  position: absolute;
-  top: 25px;
-  left: 25px;
-  max-width: 130px;
-  font-family: var(--app-font-mono);
-  font-size: 9px;
-  line-height: 1.55;
-  text-transform: uppercase;
-}
-
-.diagram-note strong {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 25px;
-  line-height: 1;
-}
 
 .structures-section {
   background: var(--ink);

@@ -660,8 +660,8 @@ function FireProtection() {
             <div className="fire-point"><Check size={16} /> Сертификаты и паспорта предоставляет исполнитель работ.</div>
           </div>
         </div>
-        <div className="fire-diagram reveal delay-2" aria-label="Схема выбора огнезащитного решения">
-          <div className="diagram-note"><strong>ПО ПРОЕКТУ</strong>требования к огнезащите согласуются с исполнителем</div>
+        <div className="fire-diagram reveal delay-2" aria-label="Интерактивная 3D-модель балки с огнезащитным покрытием">
+          <Interactive3DModel kind="fireproofing" context="fire" />
         </div>
       </div>
     </section>
