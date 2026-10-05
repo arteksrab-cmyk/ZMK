@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type WheelEvent } from 'react';
 import { Box, Minus, Plus, RotateCcw } from 'lucide-react';
-import fireproofingPhoto from '@assets/i_(1)_1791117335242.jpeg';
+import fireproofingPhoto from '@/assets/fireproofing-coating.jpeg';
 import { defaultRalColor, insulationOptions, panelTypeOptions, type InsulationType, type PanelType } from '@/data/panel-catalog';
 import { drawDepthScene } from './webgl-model-renderer';
 import type { Camera, Face, Point3 } from './model-types';
