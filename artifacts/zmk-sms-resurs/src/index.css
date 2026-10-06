@@ -468,6 +468,19 @@ a {
   font-style: normal;
 }
 
+.hero h1.hero-project-title {
+  font-family: var(--app-font-sans);
+  font-size: clamp(28px, 3.4vw, 52px);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -0.035em;
+}
+
+.hero-project-title > span,
+.hero-project-title > em {
+  display: block;
+}
+
 .hero-lede {
   max-width: 495px;
   margin: 0 0 18px;

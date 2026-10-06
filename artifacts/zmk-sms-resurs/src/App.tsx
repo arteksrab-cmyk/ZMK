@@ -33,7 +33,8 @@ import { WindowShowcase } from '@/components/window-showcase';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
-import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
+import ReferenceList from '@/pages/reference-list';
+import { Link, Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import sokolLogo from './sokol-logo.svg';
 
 const queryClient = new QueryClient();
@@ -276,6 +277,7 @@ function Header() {
           <a href="#glazing" data-testid="link-glazing">Остекление</a>
           <a href="#panels" data-testid="link-panels">Панели</a>
           <a href="#structures" data-testid="link-structures">Конструкции</a>
+          <Link href="/referens-list" data-testid="link-nav-reference-list">Референс-лист</Link>
           <a href="#workflow" data-testid="link-workflow">Процесс</a>
           <a href="#contacts" data-testid="link-contacts">Контакты</a>
         </nav>
@@ -349,6 +351,7 @@ function Header() {
           <a href="#glazing" onClick={closeMenu} data-testid="mobile-link-glazing">Остекление</a>
           <a href="#panels" onClick={closeMenu} data-testid="mobile-link-panels">Сэндвич-панели</a>
           <a href="#structures" onClick={closeMenu} data-testid="mobile-link-structures">Конструкции</a>
+          <Link href="/referens-list" onClick={closeMenu} data-testid="mobile-link-reference-list">Референс-лист</Link>
           <a href="#workflow" onClick={closeMenu} data-testid="mobile-link-workflow">Процесс</a>
           <a href="#contacts" onClick={closeMenu} data-testid="mobile-link-contacts">Запросить расчёт</a>
           <div className="mobile-contact">
@@ -371,9 +374,10 @@ function Hero() {
       <div className="hero-content">
         <div className="hero-copy reveal">
           <span className="eyebrow">ЗМК · Новосибирск · Работа по проекту</span>
-          <h1 className="display">
-            <span className="hero-title-first">Собираем <em>опору</em></span>
-            <span className="hero-title-last">для бизнеса.</span>
+          <h1 className="display hero-project-title">
+            <span>Изготовление и поставка</span>{' '}
+            <em>металлоконструкций</em>{' '}
+            <span>по вашим проектам.</span>
           </h1>
           <p className="hero-lede">
             Производим и поставляем металлоконструкции для промышленных,
@@ -387,6 +391,9 @@ function Hero() {
             <a href="#workflow" className="button-ghost" data-testid="button-hero-process">
               Как это работает <ArrowDownRight size={16} />
             </a>
+            <Link href="/referens-list" className="button-ghost" data-testid="button-hero-reference-list">
+              Референс-лист <FileCheck2 size={16} aria-hidden="true" />
+            </Link>
           </div>
           <div className="hero-note">
             <ShieldCheck size={15} /> Работаем по проектной документации и заданию заказчика
@@ -711,6 +718,11 @@ function Structures() {
               {current.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}
             </div>
           </article>
+        </div>
+        <div className="reveal" style={{ marginTop: 28 }}>
+          <Link href="/referens-list" className="button-primary" data-testid="link-reference-list">
+            Референс-лист поставок <ArrowUpRight size={16} aria-hidden="true" />
+          </Link>
         </div>
       </div>
     </section>
@@ -1200,6 +1212,8 @@ function Router() {
     <RoutedErrorBoundary>
       <Switch>
         <Route path="/" component={LandingPage} />
+        <Route path="/referens-list" component={ReferenceList} />
+        <Route path="/referens-list/" component={ReferenceList} />
         <Route component={NotFound} />
       </Switch>
     </RoutedErrorBoundary>
