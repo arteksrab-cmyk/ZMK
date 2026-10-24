@@ -8,6 +8,12 @@ const NA = 'не указано';
 const fmt = (n: number) => n.toLocaleString('ru-RU', { maximumFractionDigits: 2 });
 type YearFilter = 'all' | 'unknown' | number;
 
+const referenceSeo = {
+  title: 'Референс-лист металлоконструкций 2023–2026 | ЗМК СМС-РЕСУРС',
+  description: 'Референс-лист ЗМК СМС-РЕСУРС: перечень объектов 2023–2026 годов, указанные объёмы и оригинальный подписанный документ с печатью.',
+  canonical: 'https://xn----8sbtjdcksrjl.xn--p1ai/referens-list',
+};
+
 export default function ReferenceList() {
   const [query, setQuery] = useState('');
   const [year, setYear] = useState<YearFilter>('all');
@@ -15,9 +21,34 @@ export default function ReferenceList() {
 
   useEffect(() => {
     const previousTitle = document.title;
-    document.title = 'Референс-лист 2023–2026 — ЗМК СМС-РЕСУРС';
+    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    const previousCanonical = canonical?.getAttribute('href') ?? null;
+    const metaValues = [
+      ['name', 'description', referenceSeo.description],
+      ['property', 'og:title', referenceSeo.title],
+      ['property', 'og:description', referenceSeo.description],
+      ['property', 'og:url', referenceSeo.canonical],
+      ['name', 'twitter:title', referenceSeo.title],
+      ['name', 'twitter:description', referenceSeo.description],
+    ] as const;
+    const previousMeta = metaValues.map(([attribute, key]) => {
+      const element = document.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`);
+      return { element, content: element?.getAttribute('content') ?? null };
+    });
+
+    document.title = referenceSeo.title;
+    canonical?.setAttribute('href', referenceSeo.canonical);
+    metaValues.forEach(([attribute, key, content]) => {
+      document.querySelector<HTMLMetaElement>(`meta[${attribute}="${key}"]`)?.setAttribute('content', content);
+    });
     window.scrollTo({ top: 0, behavior: 'instant' });
-    return () => { document.title = previousTitle; };
+    return () => {
+      document.title = previousTitle;
+      if (canonical && previousCanonical) canonical.setAttribute('href', previousCanonical);
+      previousMeta.forEach(({ element, content }) => {
+        if (element && content !== null) element.setAttribute('content', content);
+      });
+    };
   }, []);
 
   const years = useMemo(
