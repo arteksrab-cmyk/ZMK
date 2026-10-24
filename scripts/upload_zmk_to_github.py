@@ -157,7 +157,7 @@ def create_initial_empty_file(token: str) -> None:
     print("Created the empty .gitkeep file in the initial GitHub commit.")
 
 
-def upload_changes(files: list[tuple[Path, str]], token: str) -> None:
+def upload_changes(files: list[tuple[Path, str]], token: str, message: str) -> None:
     ref = get_branch_ref(token)
     if ref is None:
         create_initial_empty_file(token)
@@ -218,7 +218,7 @@ def upload_changes(files: list[tuple[Path, str]], token: str) -> None:
         f"/repos/{REPO}/git/commits",
         token,
         {
-            "message": "Update ZMK website, API and SEO files",
+            "message": message,
             "tree": new_tree["sha"],
             "parents": [head_sha],
         },
@@ -241,8 +241,26 @@ def main() -> int:
         action="store_true",
         help="list selected local files without contacting GitHub",
     )
+    parser.add_argument(
+        "--only",
+        action="append",
+        default=[],
+        metavar="PATH",
+        help="restrict the upload to this exact repository-relative path; repeat as needed",
+    )
+    parser.add_argument(
+        "--message",
+        default="Update ZMK website, API and SEO files",
+        help="GitHub commit message",
+    )
     args = parser.parse_args()
     files = collect_files()
+    if args.only:
+        available = {repo_path: (local_path, repo_path) for local_path, repo_path in files}
+        missing = sorted(set(args.only) - available.keys())
+        if missing:
+            parser.error(f"--only path not found in upload selection: {', '.join(missing)}")
+        files = [available[path] for path in dict.fromkeys(args.only)]
     if args.dry_run:
         print(f"Would upload {len(files)} files to {REPO} ({BRANCH}):")
         for _, repo_path in files:
@@ -257,7 +275,7 @@ def main() -> int:
         )
         return 1
     try:
-        upload_changes(files, token)
+        upload_changes(files, token, args.message)
     except (GitHubApiError, RuntimeError, KeyError, ValueError) as error:
         print(f"Upload failed: {error}", file=sys.stderr)
         return 1
