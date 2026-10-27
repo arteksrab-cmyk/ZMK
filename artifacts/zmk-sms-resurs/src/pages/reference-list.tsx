@@ -99,7 +99,7 @@ export default function ReferenceList() {
               Открыть публичную копию <ArrowUpRight size={16} aria-hidden="true" />
             </a>
           </div>
-          <small className="ref-file">PDF, 3 страницы. Сведения о заказчиках удалены; это не подписанный оригинал.</small>
+          <small className="ref-file">PDF, 4 страницы. Печать сохранена; это обезличенная копия, не оригинал.</small>
           <dl className="ref-figures">
             <div><dt>Записей в списке</dt><dd>{referenceProjects.length}</dd></div>
             <div><dt>Известный объём, т</dt><dd>{fmt(totalKnown)}</dd></div>
