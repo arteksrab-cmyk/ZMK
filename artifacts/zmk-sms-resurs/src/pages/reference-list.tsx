@@ -10,7 +10,7 @@ type YearFilter = 'all' | 'unknown' | number;
 
 const referenceSeo = {
   title: 'Референс-лист металлоконструкций 2023–2026 | ЗМК СМС-РЕСУРС',
-  description: 'Референс-лист ЗМК СМС-РЕСУРС: перечень объектов 2023–2026 годов, указанные объёмы и оригинальный подписанный документ с печатью.',
+  description: 'Референс-лист ЗМК СМС-РЕСУРС за 2023–2026 годы: объекты, места, объёмы и даты начала. Сведения о заказчиках не публикуются.',
   canonical: 'https://xn----8sbtjdcksrjl.xn--p1ai/referens-list',
 };
 
@@ -62,7 +62,7 @@ export default function ReferenceList() {
   const q = query.trim().toLowerCase();
   const rows = referenceProjects.filter((p) => {
     if (year === 'unknown' ? p.year !== null : year !== 'all' && p.year !== year) return false;
-    return !q || `${p.name} ${p.location} ${p.customer ?? ''}`.toLowerCase().includes(q);
+    return !q || `${p.name} ${p.location}`.toLowerCase().includes(q);
   });
   const reset = () => { setQuery(''); setYear('all'); };
 
@@ -88,18 +88,18 @@ export default function ReferenceList() {
           <span className="eyebrow">Опыт поставок · 2023–2026</span>
           <h1 className="display">Референс-лист</h1>
           <p>
-            Перечень объектов из подписанного референс-листа. Даты в списке указывают на начало реализации,
-            а не на срок завершения или поставки. Нумерация совпадает с оригиналом.
+            Публичный перечень объектов. Даты указывают на начало реализации, а не на срок завершения
+            или поставки. Сведения о заказчиках в списке не публикуются.
           </p>
           <div className="ref-document-actions">
-            <a className="button-primary ref-download" href={referencePdfPath} download="СМС-РЕСУРС референс-лист 2023-2026.pdf" data-testid="link-ref-download">
-              <Download size={16} aria-hidden="true" /> Скачать PDF с печатью
+            <a className="button-primary ref-download" href={referencePdfPath} download="СМС-РЕСУРС референс-лист 2023-2026 публичная копия.pdf" data-testid="link-ref-download">
+              <Download size={16} aria-hidden="true" /> Скачать PDF без заказчиков
             </a>
             <a className="ref-document-open" href={referencePdfPath} target="_blank" rel="noopener noreferrer" data-testid="link-ref-open">
-              Открыть оригинал <ArrowUpRight size={16} aria-hidden="true" />
+              Открыть публичную копию <ArrowUpRight size={16} aria-hidden="true" />
             </a>
           </div>
-          <small className="ref-file">PDF, 4 страницы, 2,3 МБ. Подпись и печать — на странице 3.</small>
+          <small className="ref-file">PDF, 3 страницы. Сведения о заказчиках удалены; это не подписанный оригинал.</small>
           <dl className="ref-figures">
             <div><dt>Записей в списке</dt><dd>{referenceProjects.length}</dd></div>
             <div><dt>Известный объём, т</dt><dd>{fmt(totalKnown)}</dd></div>
@@ -113,8 +113,8 @@ export default function ReferenceList() {
         <section aria-label="Поиск и фильтры" className="ref-controls">
           <label className="ref-search">
             <Search size={16} aria-hidden="true" />
-            <span className="ref-sr">Поиск по названию, месту или заказчику</span>
-            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Escape') setQuery(''); }} placeholder="Название, место, заказчик" data-testid="input-ref-search" />
+            <span className="ref-sr">Поиск по названию или месту</span>
+            <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => { if (e.key === 'Escape') setQuery(''); }} placeholder="Название или место" data-testid="input-ref-search" />
             {query && (
               <button type="button" onClick={() => setQuery('')} aria-label="Очистить поиск"><X size={14} /></button>
             )}
@@ -142,7 +142,7 @@ export default function ReferenceList() {
               <thead>
                 <tr>
                   <th scope="col">№</th><th scope="col">Объект</th><th scope="col">Место</th>
-                  <th scope="col">Заказчик</th><th scope="col" className="num">Объём, т</th><th scope="col">Начало реализации</th>
+                  <th scope="col" className="num">Объём, т</th><th scope="col">Начало реализации</th>
                 </tr>
               </thead>
               <tbody>
@@ -151,7 +151,6 @@ export default function ReferenceList() {
                     <td data-label="№" className="id">{String(p.id).padStart(2, '0')}</td>
                     <th scope="row" data-label="Объект">{p.name}</th>
                     <td data-label="Место" className={p.location ? '' : 'na'}>{p.location || NA}</td>
-                    <td data-label="Заказчик" className={p.customer ? '' : 'na'}>{p.customer ?? NA}</td>
                     <td data-label="Объём, т" className={`num${p.tonnes === null ? ' na' : ''}`}>{p.tonnes === null ? NA : fmt(p.tonnes)}</td>
                     <td data-label="Начало реализации" className={p.date ? '' : 'na'}>{p.date ?? NA}</td>
                   </tr>
@@ -162,7 +161,7 @@ export default function ReferenceList() {
         )}
         <p className="ref-caption">
           Поля «не указано» не заполнены в исходном документе. Данные объекта № 47 уточнены компанией:
-          объём — 104 т, начало реализации — август 2026 г. В оригинальном PDF эти поля не заполнены.
+          объём — 104 т, начало реализации — август 2026 г.
         </p>
         <Link href="/" className="ref-back ref-back-bottom" data-testid="link-ref-back-bottom"><ArrowLeft size={14} aria-hidden="true" /> Вернуться на главную</Link>
       </main>
