@@ -11,9 +11,7 @@
 .ref-hero .ref-caption{margin:12px 0 0}
 .ref-download{display:inline-flex}
 .ref-document-actions{display:flex;align-items:center;flex-wrap:wrap;gap:16px 24px}
-.ref-document-open{display:inline-flex;align-items:center;gap:6px;color:var(--ink);font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:4px}
-.ref-document-open:hover{color:var(--orange-deep)}
-.ref-document-open:focus-visible,.ref-brand:focus-visible,.ref-search button:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+.ref-brand:focus-visible,.ref-search button:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
 .ref-file{display:block;margin-top:10px;font-family:var(--app-font-mono);font-size:10px;color:var(--steel-dark)}
 .ref-figures{display:grid;grid-template-columns:repeat(3,1fr);margin:32px 0 0;border:1px solid var(--line);background:var(--paper-deep)}
 .ref-figures div{padding:22px 24px;border-left:1px solid var(--line)}

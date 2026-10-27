@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, ArrowUpRight, Download, Search, X } from 'lucide-react';
+import { ArrowLeft, Download, Search, X } from 'lucide-react';
 import { Link } from 'wouter';
 import { referenceProjects, referencePdfPath } from '@/data/reference-projects';
 import './reference-list.css';
@@ -93,10 +93,7 @@ export default function ReferenceList() {
           </p>
           <div className="ref-document-actions">
             <a className="button-primary ref-download" href={referencePdfPath} download="СМС-РЕСУРС референс-лист 2023-2026 публичная копия.pdf" data-testid="link-ref-download">
-              <Download size={16} aria-hidden="true" /> Скачать PDF без заказчиков
-            </a>
-            <a className="ref-document-open" href={referencePdfPath} target="_blank" rel="noopener noreferrer" data-testid="link-ref-open">
-              Открыть публичную копию <ArrowUpRight size={16} aria-hidden="true" />
+              <Download size={16} aria-hidden="true" /> Скачать PDF
             </a>
           </div>
           <small className="ref-file">PDF, 4 страницы. Печать сохранена; это обезличенная копия, не оригинал.</small>
